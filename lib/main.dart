@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tray_manager/tray_manager.dart';
+import 'package:window_manager/window_manager.dart';
 import 'dart:io' show Platform;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
   await trayManager.setIcon(Platform.isWindows ? 'images/tray_icon.ico' : 'images/tray_icon.png');
 
   Menu menu = Menu(
@@ -14,6 +16,18 @@ void main() async {
     ],
   );
   await trayManager.setContextMenu(menu);
+
+  WindowOptions windowOptions = WindowOptions(
+    size: Size(400, 800),
+    center: true,
+    backgroundColor: Colors.transparent,
+    skipTaskbar: false,
+    titleBarStyle: TitleBarStyle.normal,
+  );
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
 
   runApp(const MyApp());
 }
