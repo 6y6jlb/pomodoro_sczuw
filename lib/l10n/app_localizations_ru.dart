@@ -129,4 +129,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String notification_exceptionAdded(Object day) {
     return 'Добавленно исключение для $day';
   }
+
+  @override
+  String get joke_loading => 'Загружается...';
+
+  @override
+  String get joke_error => 'Ошибка. Нажмите для повтора';
 }

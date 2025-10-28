@@ -40,6 +40,7 @@ dependencies:
     sdk: flutter
   intl: any
   flutter_riverpod: ^3.0.3
+  dio: ^5.9.0
 
 dev_dependencies:
   flutter_test:

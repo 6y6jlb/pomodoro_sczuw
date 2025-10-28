@@ -37,5 +37,7 @@
     "scheduleExceptionAddLabel": "Добавить исключение",
     "scheduleExceptionShowLabel": "Показать исключение",
     "notification_stateChanged": "Статус изменён: {state}",
-    "notification_exceptionAdded": "Добавленно исключение для {day}"
+    "notification_exceptionAdded": "Добавленно исключение для {day}",
+    "joke_loading": "Загружается...",
+    "joke_error": "Ошибка. Нажмите для повтора"
 }

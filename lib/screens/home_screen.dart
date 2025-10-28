@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/legacy.dart';
-import 'package:pomodoro_sczuw/services/i_10n.dart';
-import 'package:pomodoro_sczuw/utils/styles/app_text_styles.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-final counterProvider = StateProvider((ref) => 0);
+import 'package:pomodoro_sczuw/utils/styles/app_text_styles.dart';
+import 'package:pomodoro_sczuw/providers/random_joke_provider.dart';
+import 'package:pomodoro_sczuw/services/i_10n.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -16,30 +14,62 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    final int counter = ref.watch(counterProvider);
+    final jokeAsync = ref.watch(randomJokeProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text('$counter from HOME PAGE', style: AppTextStyles.title)),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Text('')],
+      appBar: AppBar(title: Text('from HOME PAGE', style: AppTextStyles.title)),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Center(
+          child: SizedBox(
+            width: double.infinity,
+            child: jokeAsync.when(
+              data: (joke) => ElevatedButton(
+                onPressed: () {
+                  ref.invalidate(randomJokeProvider);
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.all(20.0),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(joke.setup, textAlign: TextAlign.center, style: AppTextStyles.caption),
+                    const SizedBox(width: 20),
+                    Text(joke.punchline, textAlign: TextAlign.center, style: AppTextStyles.captionBold),
+                  ],
+                ),
+              ),
+              loading: () => ElevatedButton(
+                onPressed: null,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.all(20.0),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))],
+                ),
+              ),
+              error: (error, stack) => ElevatedButton(
+                onPressed: () {
+                  ref.invalidate(randomJokeProvider);
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.all(20.0),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [const Icon(Icons.error), const SizedBox(width: 10), Text(I10n().t.joke_error)],
+                ),
+              ),
             ),
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Access the notifier to modify the state
-          ref.read(counterProvider.notifier).state++;
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        ),
       ),
     );
   }

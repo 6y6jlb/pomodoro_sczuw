@@ -322,6 +322,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Added exception for {day}'**
   String notification_exceptionAdded(Object day);
+
+  /// No description provided for @joke_loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get joke_loading;
+
+  /// No description provided for @joke_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error. Tap to retry'**
+  String get joke_error;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

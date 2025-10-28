@@ -129,4 +129,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String notification_exceptionAdded(Object day) {
     return 'Added exception for $day';
   }
+
+  @override
+  String get joke_loading => 'Loading...';
+
+  @override
+  String get joke_error => 'Error. Tap to retry';
 }
