@@ -101,35 +101,35 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settingsScreenTitle;
 
-  /// No description provided for @processingStateLabel_activity.
+  /// No description provided for @timerStateLabel_activity.
   ///
   /// In en, this message translates to:
   /// **'Active'**
-  String get processingStateLabel_activity;
+  String get timerStateLabel_activity;
 
-  /// No description provided for @processingStateLabel_inactivity.
+  /// No description provided for @timerStateLabel_inactivity.
   ///
   /// In en, this message translates to:
   /// **'Inactive'**
-  String get processingStateLabel_inactivity;
+  String get timerStateLabel_inactivity;
 
-  /// No description provided for @processingStateLabel_rest.
+  /// No description provided for @timerStateLabel_rest.
   ///
   /// In en, this message translates to:
   /// **'Break'**
-  String get processingStateLabel_rest;
+  String get timerStateLabel_rest;
 
-  /// No description provided for @processingStateLabel_restDelay.
+  /// No description provided for @timerStateLabel_restDelay.
   ///
   /// In en, this message translates to:
   /// **'Delayed Break'**
-  String get processingStateLabel_restDelay;
+  String get timerStateLabel_restDelay;
 
-  /// No description provided for @processingStateLabel_unknown.
+  /// No description provided for @timerStateLabel_unknown.
   ///
   /// In en, this message translates to:
   /// **'Unknown'**
-  String get processingStateLabel_unknown;
+  String get timerStateLabel_unknown;
 
   /// No description provided for @pomodoroModeLabel_custom.
   ///
@@ -323,17 +323,17 @@ abstract class AppLocalizations {
   /// **'Added exception for {day}'**
   String notification_exceptionAdded(Object day);
 
-  /// No description provided for @joke_loading.
+  /// No description provided for @loading.
   ///
   /// In en, this message translates to:
   /// **'Loading...'**
-  String get joke_loading;
+  String get loading;
 
-  /// No description provided for @joke_error.
+  /// No description provided for @error_retry.
   ///
   /// In en, this message translates to:
   /// **'Error. Tap to retry'**
-  String get joke_error;
+  String get error_retry;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

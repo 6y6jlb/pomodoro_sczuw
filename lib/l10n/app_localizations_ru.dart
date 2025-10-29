@@ -12,19 +12,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingsScreenTitle => 'Настройки';
 
   @override
-  String get processingStateLabel_activity => 'Активно';
+  String get timerStateLabel_activity => 'Активно';
 
   @override
-  String get processingStateLabel_inactivity => 'Неактивно';
+  String get timerStateLabel_inactivity => 'Inactive';
 
   @override
-  String get processingStateLabel_rest => 'Перерыв';
+  String get timerStateLabel_rest => 'Перерыв';
 
   @override
-  String get processingStateLabel_restDelay => 'Отложенный перерыв';
+  String get timerStateLabel_restDelay => 'Отложенный перерыв';
 
   @override
-  String get processingStateLabel_unknown => 'Неизвестно';
+  String get timerStateLabel_unknown => 'Неизвестно';
 
   @override
   String get pomodoroModeLabel_custom => 'Пользовательский';
@@ -131,8 +131,8 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get joke_loading => 'Загружается...';
+  String get loading => 'Загружается...';
 
   @override
-  String get joke_error => 'Ошибка. Нажмите для повтора';
+  String get error_retry => 'Ошибка. Нажмите для повтора';
 }

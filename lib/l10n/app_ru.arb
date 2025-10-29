@@ -1,11 +1,11 @@
 {
     "@@locale": "ru",
     "settingsScreenTitle": "Настройки",
-    "processingStateLabel_activity": "Активно",
+    "timerStateLabel_activity": "Активно",
     "processingStateLabel_inactivity": "Неактивно",
-    "processingStateLabel_rest": "Перерыв",
-    "processingStateLabel_restDelay": "Отложенный перерыв",
-    "processingStateLabel_unknown": "Неизвестно",
+    "timerStateLabel_rest": "Перерыв",
+    "timerStateLabel_restDelay": "Отложенный перерыв",
+    "timerStateLabel_unknown": "Неизвестно",
     "pomodoroModeLabel_custom": "Пользовательский",
     "pomodoroModeLabel_schedule": "Расписание",
     "operationModeLabel": "Режим:",
@@ -38,6 +38,6 @@
     "scheduleExceptionShowLabel": "Показать исключение",
     "notification_stateChanged": "Статус изменён: {state}",
     "notification_exceptionAdded": "Добавленно исключение для {day}",
-    "joke_loading": "Загружается...",
-    "joke_error": "Ошибка. Нажмите для повтора"
+    "loading": "Загружается...",
+    "error_retry": "Ошибка. Нажмите для повтора"
 }

@@ -54,7 +54,7 @@ class JokeWidget extends ConsumerWidget {
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [const Icon(Icons.error), const SizedBox(width: 10), Text(I10n().t.joke_error)],
+            children: [const Icon(Icons.error), const SizedBox(width: 10), Text(I10n().t.error_retry)],
           ),
         ),
       ),

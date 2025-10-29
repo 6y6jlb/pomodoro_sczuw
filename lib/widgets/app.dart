@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pomodoro_sczuw/l10n/app_localizations.dart';
 import 'package:pomodoro_sczuw/screens/home_screen.dart';
 import 'package:pomodoro_sczuw/services/i_10n.dart';
+import 'package:pomodoro_sczuw/theme/alert_colors.dart';
+import 'package:pomodoro_sczuw/theme/timer_colors.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -13,8 +15,7 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> with WindowListener, TrayListener {
-
-@override
+  @override
   void onWindowEvent(String eventName) {
     print('[WindowManager] onWindowEvent: $eventName');
   }
@@ -42,7 +43,7 @@ class _AppState extends State<App> with WindowListener, TrayListener {
   }
 
   void _initWindowManager() {
-      WindowOptions windowOptions = WindowOptions(
+    WindowOptions windowOptions = WindowOptions(
       size: Size(400, 800),
       center: false,
       backgroundColor: Colors.transparent,
@@ -80,7 +81,6 @@ class _AppState extends State<App> with WindowListener, TrayListener {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -92,6 +92,20 @@ class _AppState extends State<App> with WindowListener, TrayListener {
           backgroundColor: Colors.green[400],
           contentTextStyle: TextStyle(color: Colors.white),
         ),
+        extensions: [
+          AlertColors(
+            info: Colors.blue.shade800,
+            warning: Colors.orange.shade800,
+            success: Colors.green.shade800,
+            danger: Colors.red.shade800,
+          ),
+          TimerColors(
+            activity: Colors.green[300]!,
+            inactivity: Colors.grey[500]!,
+            rest: Colors.blue[400]!,
+            restDelay: Colors.deepPurple[300]!,
+          ),
+        ],
       ),
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green[800]!, brightness: Brightness.dark),
@@ -101,6 +115,20 @@ class _AppState extends State<App> with WindowListener, TrayListener {
           contentTextStyle: TextStyle(color: Colors.white),
         ),
         useMaterial3: true,
+        extensions: [
+          AlertColors(
+            info: Colors.blue.shade800,
+            warning: Colors.orange.shade800,
+            success: Colors.green.shade800,
+            danger: Colors.red.shade800,
+          ),
+          TimerColors(
+            activity: Colors.green[800]!,
+            inactivity: Colors.grey[700]!,
+            rest: Colors.blue[900]!,
+            restDelay: Colors.deepPurple[800]!,
+          ),
+        ],
       ),
       themeMode: ThemeMode.system,
       home: HomeScreen(),

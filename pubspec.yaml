@@ -41,6 +41,7 @@ dependencies:
   intl: any
   flutter_riverpod: ^3.0.3
   dio: ^5.9.0
+  riverpod_lint: ^3.0.3
 
 dev_dependencies:
   flutter_test:

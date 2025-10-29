@@ -12,19 +12,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsScreenTitle => 'Settings';
 
   @override
-  String get processingStateLabel_activity => 'Active';
+  String get timerStateLabel_activity => 'Active';
 
   @override
-  String get processingStateLabel_inactivity => 'Inactive';
+  String get timerStateLabel_inactivity => 'Inactive';
 
   @override
-  String get processingStateLabel_rest => 'Break';
+  String get timerStateLabel_rest => 'Break';
 
   @override
-  String get processingStateLabel_restDelay => 'Delayed Break';
+  String get timerStateLabel_restDelay => 'Delayed Break';
 
   @override
-  String get processingStateLabel_unknown => 'Unknown';
+  String get timerStateLabel_unknown => 'Unknown';
 
   @override
   String get pomodoroModeLabel_custom => 'Custom';
@@ -131,8 +131,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get joke_loading => 'Loading...';
+  String get loading => 'Loading...';
 
   @override
-  String get joke_error => 'Error. Tap to retry';
+  String get error_retry => 'Error. Tap to retry';
 }

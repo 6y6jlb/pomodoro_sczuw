@@ -1,11 +1,11 @@
 {
     "@@locale": "en",
     "settingsScreenTitle": "Settings",
-    "processingStateLabel_activity": "Active",
-    "processingStateLabel_inactivity": "Inactive",
-    "processingStateLabel_rest": "Break",
-    "processingStateLabel_restDelay": "Delayed Break",
-    "processingStateLabel_unknown": "Unknown",
+    "timerStateLabel_activity": "Active",
+    "timerStateLabel_inactivity": "Inactive",
+    "timerStateLabel_rest": "Break",
+    "timerStateLabel_restDelay": "Delayed Break",
+    "timerStateLabel_unknown": "Unknown",
     "pomodoroModeLabel_custom": "Custom",
     "pomodoroModeLabel_schedule": "Schedule",
     "operationModeLabel": "Mode:",
@@ -38,6 +38,6 @@
     "scheduleExceptionShowLabel": "Show exception",
     "notification_stateChanged": "State changed: {state}",
     "notification_exceptionAdded": "Added exception for {day}",
-    "joke_loading": "Loading...",
-    "joke_error": "Error. Tap to retry"
+    "loading": "Loading...",
+    "error_retry": "Error. Tap to retry"
 }

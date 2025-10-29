@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class ProcessingColors extends ThemeExtension<ProcessingColors> {
+class TimerColors extends ThemeExtension<TimerColors> {
   final Color activity;
   final Color inactivity;
   final Color rest;
   final Color restDelay;
 
-  ProcessingColors({required this.activity, required this.inactivity, required this.rest, required this.restDelay});
+  TimerColors({required this.activity, required this.inactivity, required this.rest, required this.restDelay});
 
   @override
-  ThemeExtension<ProcessingColors> copyWith({Color? activity, Color? inactivity, Color? rest, Color? restDelay}) {
-    return ProcessingColors(
+  ThemeExtension<TimerColors> copyWith({Color? activity, Color? inactivity, Color? rest, Color? restDelay}) {
+    return TimerColors(
       activity: activity ?? this.activity,
       inactivity: inactivity ?? this.inactivity,
       rest: rest ?? this.rest,
@@ -19,9 +19,9 @@ class ProcessingColors extends ThemeExtension<ProcessingColors> {
   }
 
   @override
-  ThemeExtension<ProcessingColors> lerp(ThemeExtension<ProcessingColors>? other, double t) {
-    if (other is! ProcessingColors) return this;
-    return ProcessingColors(
+  ThemeExtension<TimerColors> lerp(ThemeExtension<TimerColors>? other, double t) {
+    if (other is! TimerColors) return this;
+    return TimerColors(
       activity: Color.lerp(activity, other.activity, t)!,
       inactivity: Color.lerp(inactivity, other.inactivity, t)!,
       rest: Color.lerp(rest, other.rest, t)!,
