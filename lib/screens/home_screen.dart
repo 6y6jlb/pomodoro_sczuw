@@ -27,7 +27,11 @@ class HomeScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [TimerWidget(), const SizedBox(height: 30), JokeWidget()],
+              children: [
+                TimerWidget(),
+                const SizedBox(height: 30),
+                JokeWidget(backgroundColor: timer.state.colorLevel(timerColors), textColor: Colors.white),
+              ],
             ),
           ),
         ],

@@ -4,11 +4,18 @@ import 'package:pomodoro_sczuw/utils/styles/app_text_styles.dart';
 import 'package:pomodoro_sczuw/providers/random_joke_provider.dart';
 import 'package:pomodoro_sczuw/services/i_10n.dart';
 
-class JokeWidget extends ConsumerWidget {
-  const JokeWidget({super.key});
+class JokeWidget extends ConsumerStatefulWidget {
+  final Color textColor;
+  final Color backgroundColor;
+  const JokeWidget({super.key, required this.textColor, required this.backgroundColor});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<JokeWidget> createState() => _JokeWidgetState();
+}
+
+class _JokeWidgetState extends ConsumerState<JokeWidget> {
+  @override
+  Widget build(BuildContext context) {
     final jokeAsync = ref.watch(randomJokeProvider);
 
     return SizedBox(
@@ -21,13 +28,22 @@ class JokeWidget extends ConsumerWidget {
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(20.0),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+            backgroundColor: widget.backgroundColor,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(joke.setup, textAlign: TextAlign.center, style: AppTextStyles.caption),
+              Text(
+                joke.setup,
+                textAlign: TextAlign.center,
+                style: AppTextStyles.caption.copyWith(color: widget.textColor),
+              ),
               const SizedBox(width: 20),
-              Text(joke.punchline, textAlign: TextAlign.center, style: AppTextStyles.captionBold),
+              Text(
+                joke.punchline,
+                textAlign: TextAlign.center,
+                style: AppTextStyles.captionBold.copyWith(color: widget.textColor),
+              ),
             ],
           ),
         ),
