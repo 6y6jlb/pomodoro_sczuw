@@ -38,7 +38,7 @@ class _JokeWidgetState extends ConsumerState<JokeWidget> {
                 textAlign: TextAlign.center,
                 style: AppTextStyles.caption.copyWith(color: widget.textColor),
               ),
-              const SizedBox(width: 20),
+              const SizedBox(height: 10),
               Text(
                 joke.punchline,
                 textAlign: TextAlign.center,
