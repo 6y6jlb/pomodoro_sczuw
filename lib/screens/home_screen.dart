@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_sczuw/enums/timer_state.dart';
-import 'package:pomodoro_sczuw/providers/timer_provider.dart';
+import 'package:pomodoro_sczuw/enums/session_state.dart';
+import 'package:pomodoro_sczuw/providers/session_provider.dart';
 import 'package:pomodoro_sczuw/theme/timer_colors.dart';
 import 'package:pomodoro_sczuw/utils/styles/app_text_styles.dart';
 import 'package:pomodoro_sczuw/widgets/joke_widget.dart';
@@ -12,7 +12,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final timer = ref.watch(timerProvider);
+    final timer = ref.watch(sessionProvider);
     final timerColors = Theme.of(context).extension<TimerColors>()!;
     return Scaffold(
       appBar: AppBar(
