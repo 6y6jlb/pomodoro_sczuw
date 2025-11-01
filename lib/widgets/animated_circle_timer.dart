@@ -5,8 +5,19 @@ class AnimatedCircleTimer extends StatelessWidget {
   final Color fillColor;
   final Widget? upperWidget;
   final Widget? bottomWidget;
+  final int totalSeconds;
+  final int remainingSeconds;
+  final double progress;
 
-  const AnimatedCircleTimer({super.key, required this.fillColor, this.upperWidget, this.bottomWidget});
+  const AnimatedCircleTimer({
+    super.key,
+    required this.fillColor,
+    this.upperWidget,
+    this.bottomWidget,
+    required this.totalSeconds,
+    required this.remainingSeconds,
+    required this.progress,
+  });
 
   String _formatTime(int seconds) {
     if (seconds >= 3600) {
@@ -23,25 +34,33 @@ class AnimatedCircleTimer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final totalSeconds = 0;
-    final remainingSeconds = 0;
     final formattedTime = _formatTime(remainingSeconds);
-    final progress = totalSeconds > 0 ? 1 - (remainingSeconds / totalSeconds) : 0.0;
 
     return Stack(
       alignment: Alignment.center,
       children: [
-        CustomPaint(
-          size: const Size(200, 200),
-          painter: TimerCirclePainter(
-            progress: progress,
-            fillColor: fillColor,
-            timeText: formattedTime,
-            backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          child: CustomPaint(
+            size: const Size(250, 250),
+            painter: TimerCirclePainter(
+              progress: progress,
+              fillColor: fillColor,
+              timeText: formattedTime,
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+            ),
           ),
         ),
-        if (upperWidget != null) Positioned(top: 16, child: upperWidget!),
-        if (bottomWidget != null) Positioned(bottom: 16, child: bottomWidget!),
+        if (upperWidget != null)
+          Positioned(
+            top: 32,
+            child: AnimatedSwitcher(duration: const Duration(milliseconds: 200), child: upperWidget!),
+          ),
+        if (bottomWidget != null)
+          Positioned(
+            bottom: 32,
+            child: AnimatedSwitcher(duration: const Duration(milliseconds: 200), child: bottomWidget!),
+          ),
       ],
     );
   }

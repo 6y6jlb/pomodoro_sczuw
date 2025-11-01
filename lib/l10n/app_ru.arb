@@ -17,6 +17,8 @@
     "action_delay": "Отложить",
     "action_rest": "Перерыв",
     "action_confirm": "Подтвердить",
+    "action_pause": "Пауза",
+    "action_skip": "Пропустить",
     "unitShort_minute": "мин.",
     "unitShort_seconds": "с.",
     "unitShort_hours": "ч.",

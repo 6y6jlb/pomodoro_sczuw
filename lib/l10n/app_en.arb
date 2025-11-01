@@ -17,6 +17,8 @@
     "action_delay": "Delay",
     "action_rest": "Break",
     "action_confirm": "Confirm",
+    "action_pause": "Pause",
+    "action_skip": "Skip",
     "unitShort_minute": "min.",
     "unitShort_seconds": "s.",
     "unitShort_hours": "h.",

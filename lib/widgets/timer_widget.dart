@@ -16,13 +16,43 @@ class TimerWidget extends ConsumerWidget {
     final timerNotifier = ref.read(sessionProvider.notifier);
     final timerColors = Theme.of(context).extension<TimerColors>()!;
 
-    ButtonStyle commonButtonStyles = ElevatedButton.styleFrom(backgroundColor: timer.state.colorLevel(timerColors));
+    ButtonStyle commonButtonStyles = ElevatedButton.styleFrom(
+      backgroundColor: timer.state.colorLevel(timerColors),
+      minimumSize: const Size(100, 36),
+    );
 
     Widget buildBottomActionWidget() {
-      return ElevatedButton(
-        style: commonButtonStyles,
-        onPressed: timer.state.hasTimer() ? () => timerNotifier.changeState(SessionState.inactivity) : null,
-        child: Text(I10n().t.action_stop, style: AppTextStyles.action.copyWith(color: Colors.white)),
+      if (timer.state.isInactive()) {
+        return ElevatedButton(
+          style: commonButtonStyles.copyWith(backgroundColor: WidgetStateProperty.all(Colors.grey)),
+          onPressed: null,
+          child: Text(I10n().t.action_stop, style: AppTextStyles.action.copyWith(color: Colors.white)),
+        );
+      }
+
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 4,
+        children: [
+          if (timer.state.hasTimer() && timer.isRunning)
+            ElevatedButton(
+              style: commonButtonStyles,
+              onPressed: () => timerNotifier.pause(),
+              child: Text(I10n().t.action_pause, style: AppTextStyles.action.copyWith(color: Colors.white)),
+            ),
+          if (timer.state.hasTimer() && !timer.isRunning && timer.currentSeconds > 0)
+            ElevatedButton(
+              style: commonButtonStyles,
+              onPressed: () => timerNotifier.resume(),
+              child: Text(I10n().t.action_continue, style: AppTextStyles.action.copyWith(color: Colors.white)),
+            ),
+          const SizedBox(width: 8),
+          ElevatedButton(
+            style: commonButtonStyles,
+            onPressed: () => timerNotifier.changeStateToInactivity(),
+            child: Text(I10n().t.action_stop, style: AppTextStyles.action.copyWith(color: Colors.white)),
+          ),
+        ],
       );
     }
 
@@ -41,18 +71,27 @@ class TimerWidget extends ConsumerWidget {
           onPressed: () => timerNotifier.changeState(SessionState.activity),
           child: Text(I10n().t.action_start, style: commonTextStyles),
         );
-      } else {
+      } else if (timer.state.isActive()) {
         return ElevatedButton(
           style: commonButtonStyles,
           onPressed: () => timerNotifier.changeState(SessionState.rest),
           child: Text(I10n().t.action_rest, style: commonTextStyles),
         );
+      } else {
+        return ElevatedButton(
+          style: commonButtonStyles,
+          onPressed: () => timerNotifier.changeStateToNext(),
+          child: Text(I10n().t.action_skip, style: commonTextStyles),
+        );
       }
     }
 
     return AnimatedCircleTimer(
-      key: ValueKey(timer.state),
+      key: ValueKey('${timer.state}_${timer.isRunning}'),
       fillColor: timer.state.colorLevel(timerColors),
+      totalSeconds: timer.totalSeconds,
+      remainingSeconds: timer.currentSeconds,
+      progress: timer.progress,
       bottomWidget: buildBottomActionWidget(),
       upperWidget: buildUpperActionWidget(),
     );

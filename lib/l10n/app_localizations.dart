@@ -197,6 +197,18 @@ abstract class AppLocalizations {
   /// **'Confirm'**
   String get action_confirm;
 
+  /// No description provided for @action_pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get action_pause;
+
+  /// No description provided for @action_skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get action_skip;
+
   /// No description provided for @unitShort_minute.
   ///
   /// In en, this message translates to:

@@ -23,15 +23,18 @@ class HomeScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TimerWidget(),
-                const SizedBox(height: 30),
-                JokeWidget(backgroundColor: timer.state.colorLevel(timerColors), textColor: Colors.white),
-              ],
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TimerWidget(),
+                  const SizedBox(height: 30),
+                  JokeWidget(backgroundColor: timer.state.colorLevel(timerColors), textColor: Colors.white),
+                ],
+              ),
             ),
           ),
         ],

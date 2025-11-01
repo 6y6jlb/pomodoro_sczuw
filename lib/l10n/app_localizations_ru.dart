@@ -60,6 +60,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get action_confirm => 'Подтвердить';
 
   @override
+  String get action_pause => 'Пауза';
+
+  @override
+  String get action_skip => 'Пропустить';
+
+  @override
   String get unitShort_minute => 'мин.';
 
   @override

@@ -60,6 +60,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_confirm => 'Confirm';
 
   @override
+  String get action_pause => 'Pause';
+
+  @override
+  String get action_skip => 'Skip';
+
+  @override
   String get unitShort_minute => 'min.';
 
   @override
