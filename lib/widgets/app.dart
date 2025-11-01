@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pomodoro_sczuw/enums/session_state.dart';
 import 'package:pomodoro_sczuw/l10n/app_localizations.dart';
+import 'package:pomodoro_sczuw/models/pomodoro_session.dart';
+import 'package:pomodoro_sczuw/providers/timer_provider.dart';
 import 'package:pomodoro_sczuw/screens/home_screen.dart';
 import 'package:pomodoro_sczuw/services/i_10n.dart';
 import 'package:pomodoro_sczuw/theme/alert_colors.dart';
@@ -7,19 +11,14 @@ import 'package:pomodoro_sczuw/theme/timer_colors.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
-class App extends StatefulWidget {
+class App extends ConsumerStatefulWidget {
   const App({super.key});
 
   @override
-  State<App> createState() => _AppState();
+  ConsumerState<App> createState() => _AppState();
 }
 
-class _AppState extends State<App> with WindowListener, TrayListener {
-  @override
-  void onWindowEvent(String eventName) {
-    print('[WindowManager] onWindowEvent: $eventName');
-  }
-
+class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
   @override
   initState() {
     super.initState();
@@ -39,7 +38,7 @@ class _AppState extends State<App> with WindowListener, TrayListener {
         ],
       ),
     );
-    trayManager.setIcon('assets/images/pomodoro_app_icon.png');
+    trayManager.setIcon('assets/images/pomodoro_app_icon_red.png');
   }
 
   void _initWindowManager() {
@@ -54,6 +53,21 @@ class _AppState extends State<App> with WindowListener, TrayListener {
       await windowManager.show();
       await windowManager.focus();
     });
+  }
+
+  String _formatTime(int seconds) {
+    final minutes = seconds ~/ 60;
+    final remainingSeconds = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
+  void _updateTrayTitle(PomodoroSession session) {
+    if (session.state.isInactive()) {
+      trayManager.setTitle('');
+    } else {
+      final timeString = _formatTime(session.currentSeconds);
+      trayManager.setTitle(timeString);
+    }
   }
 
   @override
@@ -72,6 +86,18 @@ class _AppState extends State<App> with WindowListener, TrayListener {
   }
 
   @override
+  void onWindowEvent(String eventName) {
+    final List<String> greenIconEvents = ['focus', 'show'];
+    final List<String> redIconEvents = ['blur', 'hide', 'minimize'];
+    if (greenIconEvents.contains(eventName)) {
+      trayManager.setIcon('assets/images/pomodoro_app_icon_green.png');
+    } else if (redIconEvents.contains(eventName)) {
+      trayManager.setIcon('assets/images/pomodoro_app_icon_red.png');
+    }
+    print('[WindowManager] onWindowEvent: $eventName');
+  }
+
+  @override
   void onTrayMenuItemClick(MenuItem menuItem) {
     if (menuItem.key == 'show_window') {
       windowManager.show();
@@ -83,6 +109,12 @@ class _AppState extends State<App> with WindowListener, TrayListener {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue<PomodoroSession>>(timerProvider, (previous, next) {
+      next.whenData((session) {
+        _updateTrayTitle(session);
+      });
+    });
+
     return MaterialApp(
       title: 'Pomodoro app',
       theme: ThemeData(
