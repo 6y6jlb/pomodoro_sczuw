@@ -28,7 +28,7 @@ class PomodoroSession {
 
   PomodoroSession changeState(SessionState newState) {
     final duration = newState.defaultDuration;
-    return copyWith(state: newState, currentSeconds: duration, totalSeconds: duration, isPaused: !newState.hasTimer());
+    return copyWith(state: newState, currentSeconds: duration, totalSeconds: duration, isPaused: false);
   }
 
   PomodoroSession changeStateToNext() {

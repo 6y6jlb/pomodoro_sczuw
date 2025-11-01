@@ -72,6 +72,11 @@ flutter:
     - assets/images/
     - assets/images/pomodoro_app_icon_red.png
     - assets/images/pomodoro_app_icon_green.png
+    - assets/images/pomodoro_app_icon_yellow.png
+    - assets/images/pomodoro_app_icon_purple.png
+    - assets/images/pomodoro_app_icon_gray.png
+    - assets/images/pomodoro_app_icon_blue.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

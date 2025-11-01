@@ -61,12 +61,17 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
     return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
-  void _updateTrayTitle(PomodoroSession session) {
+  void _updateTrayAttributes(PomodoroSession session) {
     if (session.state.isInactive()) {
       trayManager.setTitle('');
     } else {
       final timeString = _formatTime(session.currentSeconds);
       trayManager.setTitle(timeString);
+    }
+    if (session.isPaused) {
+      trayManager.setIcon('assets/images/pomodoro_app_icon_yellow.png');
+    } else {
+      trayManager.setIcon(session.state.icon());
     }
   }
 
@@ -87,13 +92,6 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
 
   @override
   void onWindowEvent(String eventName) {
-    final List<String> greenIconEvents = ['focus', 'show'];
-    final List<String> redIconEvents = ['blur', 'hide', 'minimize'];
-    if (greenIconEvents.contains(eventName)) {
-      trayManager.setIcon('assets/images/pomodoro_app_icon_green.png');
-    } else if (redIconEvents.contains(eventName)) {
-      trayManager.setIcon('assets/images/pomodoro_app_icon_red.png');
-    }
     print('[WindowManager] onWindowEvent: $eventName');
   }
 
@@ -111,7 +109,7 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
   Widget build(BuildContext context) {
     ref.listen<AsyncValue<PomodoroSession>>(timerProvider, (previous, next) {
       next.whenData((session) {
-        _updateTrayTitle(session);
+        _updateTrayAttributes(session);
       });
     });
 

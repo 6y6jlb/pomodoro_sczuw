@@ -35,6 +35,18 @@ extension ColorLevel on SessionState {
   }
 }
 
+extension Icon on SessionState {
+  String icon() {
+    Map<SessionState, String> icons = {
+       SessionState.activity: 'assets/images/pomodoro_app_icon_green.png',
+      SessionState.inactivity: 'assets/images/pomodoro_app_icon_gray.png',
+      SessionState.rest: 'assets/images/pomodoro_app_icon_blue.png',
+      SessionState.restDelay: 'assets/images/pomodoro_app_icon_purple.png',
+    };
+    return icons[this] ?? 'assets/images/pomodoro_app_icon_gray.png';
+  }
+}
+
 extension TypeCheck on SessionState {
   bool isInactive() {
     return this == SessionState.inactivity;
