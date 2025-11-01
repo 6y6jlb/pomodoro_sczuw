@@ -21,9 +21,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get timerStateLabel_rest => 'Перерыв';
 
   @override
-  String get timerStateLabel_restDelay => 'Отложенный перерыв';
-
-  @override
   String get timerStateLabel_unknown => 'Неизвестно';
 
   @override
@@ -39,9 +36,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sessionDurationLabel => 'Длительность сессии:';
 
   @override
-  String get breakDurationLabel => 'Длительность перерыва:';
-
-  @override
   String get action_stop => 'Стоп';
 
   @override
@@ -51,7 +45,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get action_continue => 'Продолжить';
 
   @override
-  String get action_delay => 'Отложить';
+  String get action_postpone => 'Отложить 5мин';
 
   @override
   String get action_rest => 'Перерыв';
@@ -78,10 +72,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get unitShort_days => 'д.';
 
   @override
-  String get delayedChangeStateLabel => 'Подтвердите смену статуса';
+  String get delayedChangeStateLabel => 'Confirm status change';
 
   @override
-  String get delayedRestLabel => 'Пора сделать перерыв!';
+  String get delayedRestLabel => 'Time for a break!';
 
   @override
   String get timerLabel => 'Таймер';

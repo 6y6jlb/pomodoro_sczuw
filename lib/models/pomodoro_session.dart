@@ -1,4 +1,5 @@
 import 'package:pomodoro_sczuw/enums/session_state.dart';
+import 'package:pomodoro_sczuw/utils/consts/settings_constant.dart';
 
 class PomodoroSession {
   final SessionState state;
@@ -49,12 +50,19 @@ class PomodoroSession {
   }
 
   PomodoroSession resume() {
-    return copyWith(isPaused: !(currentSeconds > 0 && state.hasTimer()));
+    return copyWith(isPaused: false);
   }
 
   PomodoroSession reset() {
     final duration = state.defaultDuration;
     return copyWith(currentSeconds: duration, totalSeconds: duration, isPaused: true);
+  }
+
+  PomodoroSession postpone() {
+    return copyWith(
+      currentSeconds: currentSeconds + SettingsConstant.postponedSeconds,
+      totalSeconds: totalSeconds + SettingsConstant.postponedSeconds,
+    );
   }
 
   bool get isCompleted => currentSeconds <= 0 && state.hasTimer();

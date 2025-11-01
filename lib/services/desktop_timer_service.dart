@@ -66,6 +66,11 @@ class DesktopTimerService implements TimerService {
   }
 
   @override
+  Future<void> postpone() async {
+    updateSession(_currentSession.postpone());
+  }
+
+  @override
   Future<void> resume() async {
     if (_currentSession.currentSeconds > 0 && _currentSession.state.hasTimer()) {
       updateSession(_currentSession.resume());

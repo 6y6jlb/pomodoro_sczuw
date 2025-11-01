@@ -18,10 +18,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timerStateLabel_inactivity => 'Inactive';
 
   @override
-  String get timerStateLabel_rest => 'Break';
-
-  @override
-  String get timerStateLabel_restDelay => 'Delayed Break';
+  String get timerStateLabel_rest => 'Rest';
 
   @override
   String get timerStateLabel_unknown => 'Unknown';
@@ -39,9 +36,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sessionDurationLabel => 'Session duration:';
 
   @override
-  String get breakDurationLabel => 'Break duration:';
-
-  @override
   String get action_stop => 'Stop';
 
   @override
@@ -51,10 +45,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_continue => 'Continue';
 
   @override
-  String get action_delay => 'Delay';
+  String get action_postpone => 'Postpone 5min';
 
   @override
-  String get action_rest => 'Break';
+  String get action_rest => 'Rest';
 
   @override
   String get action_confirm => 'Confirm';

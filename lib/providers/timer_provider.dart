@@ -43,6 +43,10 @@ class TimerNotifier extends StreamNotifier<PomodoroSession> {
     await _timerService.pause();
   }
 
+  Future<void> postpone() async {
+    await _timerService.postpone();
+  }
+
   Future<void> resume() async {
     await _timerService.resume();
   }

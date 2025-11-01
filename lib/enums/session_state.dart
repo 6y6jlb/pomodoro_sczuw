@@ -3,11 +3,11 @@ import 'package:pomodoro_sczuw/theme/timer_colors.dart';
 import 'package:pomodoro_sczuw/services/i_10n.dart';
 import 'package:pomodoro_sczuw/utils/consts/settings_constant.dart';
 
-enum SessionState { rest, activity, inactivity, restDelay }
+enum SessionState { rest, activity, inactivity }
 
 extension HasTimer on SessionState {
   bool hasTimer() {
-    return [SessionState.rest, SessionState.activity, SessionState.restDelay].contains(this);
+    return [SessionState.rest, SessionState.activity].contains(this);
   }
 }
 
@@ -17,7 +17,6 @@ extension Label on SessionState {
       SessionState.activity: I10n().t.timerStateLabel_activity,
       SessionState.inactivity: I10n().t.timerStateLabel_inactivity,
       SessionState.rest: I10n().t.timerStateLabel_rest,
-      SessionState.restDelay: I10n().t.timerStateLabel_restDelay,
     };
     return labels[this] ?? I10n().t.timerStateLabel_unknown;
   }
@@ -29,7 +28,6 @@ extension ColorLevel on SessionState {
       SessionState.activity: colors.activity,
       SessionState.inactivity: colors.inactivity,
       SessionState.rest: colors.rest,
-      SessionState.restDelay: colors.restDelay,
     };
     return colorLevels[this] ?? Colors.blueGrey;
   }
@@ -38,10 +36,9 @@ extension ColorLevel on SessionState {
 extension Icon on SessionState {
   String icon() {
     Map<SessionState, String> icons = {
-       SessionState.activity: 'assets/images/pomodoro_app_icon_green.png',
+      SessionState.activity: 'assets/images/pomodoro_app_icon_red.png',
       SessionState.inactivity: 'assets/images/pomodoro_app_icon_gray.png',
-      SessionState.rest: 'assets/images/pomodoro_app_icon_blue.png',
-      SessionState.restDelay: 'assets/images/pomodoro_app_icon_purple.png',
+      SessionState.rest: 'assets/images/pomodoro_app_icon_green.png',
     };
     return icons[this] ?? 'assets/images/pomodoro_app_icon_gray.png';
   }
@@ -56,10 +53,6 @@ extension TypeCheck on SessionState {
     return this == SessionState.activity;
   }
 
-  bool isRestDelay() {
-    return this == SessionState.restDelay;
-  }
-
   bool isRest() {
     return this == SessionState.rest;
   }
@@ -67,13 +60,11 @@ extension TypeCheck on SessionState {
 
 extension NextState on SessionState {
   SessionState next() {
-    if (isRest()) {
-      return SessionState.activity;
-    } else if (isRestDelay()) {
-      return SessionState.rest;
-    } else {
-      return SessionState.restDelay;
-    }
+    return switch (this) {
+      SessionState.activity => SessionState.rest,
+      SessionState.inactivity => SessionState.activity,
+      SessionState.rest => SessionState.activity,
+    };
   }
 }
 

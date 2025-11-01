@@ -116,14 +116,8 @@ abstract class AppLocalizations {
   /// No description provided for @timerStateLabel_rest.
   ///
   /// In en, this message translates to:
-  /// **'Break'**
+  /// **'Rest'**
   String get timerStateLabel_rest;
-
-  /// No description provided for @timerStateLabel_restDelay.
-  ///
-  /// In en, this message translates to:
-  /// **'Delayed Break'**
-  String get timerStateLabel_restDelay;
 
   /// No description provided for @timerStateLabel_unknown.
   ///
@@ -155,12 +149,6 @@ abstract class AppLocalizations {
   /// **'Session duration:'**
   String get sessionDurationLabel;
 
-  /// No description provided for @breakDurationLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Break duration:'**
-  String get breakDurationLabel;
-
   /// No description provided for @action_stop.
   ///
   /// In en, this message translates to:
@@ -179,16 +167,16 @@ abstract class AppLocalizations {
   /// **'Continue'**
   String get action_continue;
 
-  /// No description provided for @action_delay.
+  /// No description provided for @action_postpone.
   ///
   /// In en, this message translates to:
-  /// **'Delay'**
-  String get action_delay;
+  /// **'Postpone 5min'**
+  String get action_postpone;
 
   /// No description provided for @action_rest.
   ///
   /// In en, this message translates to:
-  /// **'Break'**
+  /// **'Rest'**
   String get action_rest;
 
   /// No description provided for @action_confirm.

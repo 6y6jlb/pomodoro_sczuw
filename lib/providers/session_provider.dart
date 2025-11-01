@@ -6,7 +6,6 @@ import 'package:pomodoro_sczuw/providers/timer_provider.dart';
 class SessionNotifier extends Notifier<PomodoroSession> {
   @override
   PomodoroSession build() {
-    // Слушаем изменения от timerProvider
     final timerAsyncValue = ref.watch(timerProvider);
 
     return timerAsyncValue.when(
@@ -34,6 +33,10 @@ class SessionNotifier extends Notifier<PomodoroSession> {
 
   Future<void> pause() async {
     await ref.read(timerProvider.notifier).pause();
+  }
+
+  Future<void> postpone() async {
+    await ref.read(timerProvider.notifier).postpone();
   }
 
   Future<void> resume() async {
