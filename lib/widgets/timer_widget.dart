@@ -23,7 +23,7 @@ class TimerWidget extends ConsumerWidget {
         return ElevatedButton(
           style: commonButtonStyles.copyWith(backgroundColor: WidgetStateProperty.all(timerColors.inactivity)),
           onPressed: null,
-          child: Text(I10n().t.action_stop, style: AppTextStyles.action.copyWith(color: Colors.white)),
+          child: Text(I10n().t.action_stop, style: AppTextStyles.action.copyWith(color: Colors.blueGrey[200])),
         );
       }
 
@@ -43,7 +43,7 @@ class TimerWidget extends ConsumerWidget {
                 ElevatedButton(
                   style: commonButtonStyles.copyWith(backgroundColor: WidgetStateProperty.all(timerColors.resume)),
                   onPressed: () => timerNotifier.resume(),
-                  child: Text(I10n().t.action_continue, style: AppTextStyles.action.copyWith(color: Colors.white)),
+                  child: Text(I10n().t.action_resume, style: AppTextStyles.action.copyWith(color: Colors.white)),
                 ),
               const SizedBox(width: 8),
               ElevatedButton(
@@ -71,7 +71,7 @@ class TimerWidget extends ConsumerWidget {
       return ElevatedButton(
         style: commonButtonStyles.copyWith(backgroundColor: WidgetStateProperty.all(nextState.colorLevel(timerColors))),
         onPressed: () => timerNotifier.changeStateToNext(),
-        child: Text(nextState.label(), style: commonTextStyles),
+        child: Text(nextState.actionLabel(), style: commonTextStyles),
       );
     }
 

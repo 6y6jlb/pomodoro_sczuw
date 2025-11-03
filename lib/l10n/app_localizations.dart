@@ -167,10 +167,16 @@ abstract class AppLocalizations {
   /// **'Continue'**
   String get action_continue;
 
+  /// No description provided for @action_resume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get action_resume;
+
   /// No description provided for @action_postpone.
   ///
   /// In en, this message translates to:
-  /// **'Postpone 5min'**
+  /// **'+5min'**
   String get action_postpone;
 
   /// No description provided for @action_rest.
@@ -178,6 +184,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rest'**
   String get action_rest;
+
+  /// No description provided for @action_break.
+  ///
+  /// In en, this message translates to:
+  /// **'Break'**
+  String get action_break;
 
   /// No description provided for @action_confirm.
   ///
@@ -191,11 +203,11 @@ abstract class AppLocalizations {
   /// **'Pause'**
   String get action_pause;
 
-  /// No description provided for @action_skip.
+  /// No description provided for @action_unknown.
   ///
   /// In en, this message translates to:
-  /// **'Skip'**
-  String get action_skip;
+  /// **'Unknown'**
+  String get action_unknown;
 
   /// No description provided for @unitShort_minute.
   ///
@@ -220,18 +232,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'d.'**
   String get unitShort_days;
-
-  /// No description provided for @delayedChangeStateLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm status change'**
-  String get delayedChangeStateLabel;
-
-  /// No description provided for @delayedRestLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Time for a break!'**
-  String get delayedRestLabel;
 
   /// No description provided for @timerLabel.
   ///

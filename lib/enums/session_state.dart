@@ -22,6 +22,17 @@ extension Label on SessionState {
   }
 }
 
+extension ActionLabel on SessionState {
+  String actionLabel() {
+    var labels = {
+      SessionState.activity: I10n().t.action_start,
+      SessionState.inactivity: I10n().t.action_stop,
+      SessionState.rest: I10n().t.action_break,
+    };
+    return labels[this] ?? I10n().t.action_unknown;
+  }
+}
+
 extension ColorLevel on SessionState {
   Color colorLevel(TimerColors colors) {
     Map<SessionState, Color> colorLevels = {

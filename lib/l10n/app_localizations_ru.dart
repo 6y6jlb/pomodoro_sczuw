@@ -39,16 +39,22 @@ class AppLocalizationsRu extends AppLocalizations {
   String get action_stop => 'Стоп';
 
   @override
-  String get action_start => 'Запуск';
+  String get action_start => 'Старт';
 
   @override
   String get action_continue => 'Продолжить';
 
   @override
-  String get action_postpone => 'Отложить 5мин';
+  String get action_resume => 'Возобновить';
+
+  @override
+  String get action_postpone => '+5мин';
 
   @override
   String get action_rest => 'Перерыв';
+
+  @override
+  String get action_break => 'Отдых';
 
   @override
   String get action_confirm => 'Подтвердить';
@@ -57,7 +63,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get action_pause => 'Пауза';
 
   @override
-  String get action_skip => 'Пропустить';
+  String get action_unknown => 'Неизвестно';
 
   @override
   String get unitShort_minute => 'мин.';
@@ -70,12 +76,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get unitShort_days => 'д.';
-
-  @override
-  String get delayedChangeStateLabel => 'Confirm status change';
-
-  @override
-  String get delayedRestLabel => 'Time for a break!';
 
   @override
   String get timerLabel => 'Таймер';

@@ -45,10 +45,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_continue => 'Continue';
 
   @override
-  String get action_postpone => 'Postpone 5min';
+  String get action_resume => 'Resume';
+
+  @override
+  String get action_postpone => '+5min';
 
   @override
   String get action_rest => 'Rest';
+
+  @override
+  String get action_break => 'Break';
 
   @override
   String get action_confirm => 'Confirm';
@@ -57,7 +63,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_pause => 'Pause';
 
   @override
-  String get action_skip => 'Skip';
+  String get action_unknown => 'Unknown';
 
   @override
   String get unitShort_minute => 'min.';
@@ -70,12 +76,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unitShort_days => 'd.';
-
-  @override
-  String get delayedChangeStateLabel => 'Confirm status change';
-
-  @override
-  String get delayedRestLabel => 'Time for a break!';
 
   @override
   String get timerLabel => 'Timer';
