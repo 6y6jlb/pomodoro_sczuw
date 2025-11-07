@@ -131,6 +131,42 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get notification_activity_title => 'Pomodoro - Work Time! 🍅';
+
+  @override
+  String get notification_activity_body => 'Work session is starting. Focus on your task!';
+
+  @override
+  String get notification_rest_title => 'Pomodoro - Break Time! ☕';
+
+  @override
+  String get notification_rest_body => 'Break is starting. Relax and rest!';
+
+  @override
+  String get notification_inactivity_title => 'Pomodoro - Stopped';
+
+  @override
+  String get notification_inactivity_body => 'Timer is stopped. Ready to start a new session?';
+
+  @override
+  String get notification_activity_complete_title => 'Work session completed! ✅';
+
+  @override
+  String get notification_activity_complete_body => 'Great work! Time for a well-deserved break.';
+
+  @override
+  String get notification_rest_complete_title => 'Break completed! 🔄';
+
+  @override
+  String get notification_rest_complete_body => 'Rest is over. Ready for a new work session?';
+
+  @override
+  String get notification_inactivity_complete_title => 'Session completed';
+
+  @override
+  String get notification_inactivity_complete_body => 'Ready to start a new session?';
+
+  @override
   String get loading => 'Loading...';
 
   @override

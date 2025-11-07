@@ -15,7 +15,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get timerStateLabel_activity => 'Активно';
 
   @override
-  String get timerStateLabel_inactivity => 'Inactive';
+  String get timerStateLabel_inactivity => 'Неактивно';
 
   @override
   String get timerStateLabel_rest => 'Перерыв';
@@ -129,6 +129,42 @@ class AppLocalizationsRu extends AppLocalizations {
   String notification_exceptionAdded(Object day) {
     return 'Добавленно исключение для $day';
   }
+
+  @override
+  String get notification_activity_title => 'Pomodoro - Время работы! 🍅';
+
+  @override
+  String get notification_activity_body => 'Начинается рабочая сессия. Сосредоточьтесь на задаче!';
+
+  @override
+  String get notification_rest_title => 'Pomodoro - Время отдыха! ☕';
+
+  @override
+  String get notification_rest_body => 'Начинается перерыв. Расслабьтесь и отдохните!';
+
+  @override
+  String get notification_inactivity_title => 'Pomodoro - Остановлено';
+
+  @override
+  String get notification_inactivity_body => 'Таймер остановлен. Готовы начать новую сессию?';
+
+  @override
+  String get notification_activity_complete_title => 'Рабочая сессия завершена! ✅';
+
+  @override
+  String get notification_activity_complete_body => 'Отличная работа! Время для заслуженного перерыва.';
+
+  @override
+  String get notification_rest_complete_title => 'Перерыв завершён! 🔄';
+
+  @override
+  String get notification_rest_complete_body => 'Отдых завершён. Готовы к новой рабочей сессии?';
+
+  @override
+  String get notification_inactivity_complete_title => 'Сессия завершена';
+
+  @override
+  String get notification_inactivity_complete_body => 'Готовы начать новую сессию?';
 
   @override
   String get loading => 'Загружается...';

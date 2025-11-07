@@ -323,6 +323,78 @@ abstract class AppLocalizations {
   /// **'Added exception for {day}'**
   String notification_exceptionAdded(Object day);
 
+  /// No description provided for @notification_activity_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro - Work Time! 🍅'**
+  String get notification_activity_title;
+
+  /// No description provided for @notification_activity_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Work session is starting. Focus on your task!'**
+  String get notification_activity_body;
+
+  /// No description provided for @notification_rest_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro - Break Time! ☕'**
+  String get notification_rest_title;
+
+  /// No description provided for @notification_rest_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Break is starting. Relax and rest!'**
+  String get notification_rest_body;
+
+  /// No description provided for @notification_inactivity_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro - Stopped'**
+  String get notification_inactivity_title;
+
+  /// No description provided for @notification_inactivity_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer is stopped. Ready to start a new session?'**
+  String get notification_inactivity_body;
+
+  /// No description provided for @notification_activity_complete_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Work session completed! ✅'**
+  String get notification_activity_complete_title;
+
+  /// No description provided for @notification_activity_complete_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Great work! Time for a well-deserved break.'**
+  String get notification_activity_complete_body;
+
+  /// No description provided for @notification_rest_complete_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Break completed! 🔄'**
+  String get notification_rest_complete_title;
+
+  /// No description provided for @notification_rest_complete_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest is over. Ready for a new work session?'**
+  String get notification_rest_complete_body;
+
+  /// No description provided for @notification_inactivity_complete_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Session completed'**
+  String get notification_inactivity_complete_title;
+
+  /// No description provided for @notification_inactivity_complete_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to start a new session?'**
+  String get notification_inactivity_complete_body;
+
   /// No description provided for @loading.
   ///
   /// In en, this message translates to:

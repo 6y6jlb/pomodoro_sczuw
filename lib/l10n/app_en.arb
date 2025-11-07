@@ -38,6 +38,18 @@
     "scheduleExceptionShowLabel": "Show exception",
     "notification_stateChanged": "State changed: {state}",
     "notification_exceptionAdded": "Added exception for {day}",
+    "notification_activity_title": "Pomodoro - Work Time! 🍅",
+    "notification_activity_body": "Work session is starting. Focus on your task!",
+    "notification_rest_title": "Pomodoro - Break Time! ☕",
+    "notification_rest_body": "Break is starting. Relax and rest!",
+    "notification_inactivity_title": "Pomodoro - Stopped",
+    "notification_inactivity_body": "Timer is stopped. Ready to start a new session?",
+    "notification_activity_complete_title": "Work session completed! ✅",
+    "notification_activity_complete_body": "Great work! Time for a well-deserved break.",
+    "notification_rest_complete_title": "Break completed! 🔄",
+    "notification_rest_complete_body": "Rest is over. Ready for a new work session?",
+    "notification_inactivity_complete_title": "Session completed",
+    "notification_inactivity_complete_body": "Ready to start a new session?",
     "loading": "Loading...",
     "error_retry": "Error. Tap to retry"
 }
