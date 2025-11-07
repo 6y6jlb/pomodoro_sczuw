@@ -9,10 +9,12 @@ class EventsSoundService {
 
   void playSound(TimerEvent event) {
     final soundPath = switch (event) {
-      TimerCompleted() => 'sounds/toogle.mp3',
+      TimerCompleted() => 'sounds/request.mp3',
       TimerPaused() => 'sounds/toggle.mp3',
       TimerResumed() => 'sounds/toggle.mp3',
-      TimerStopped() => 'sounds/request.mp3',
+      TimerStopped() => 'sounds/toggle.mp3',
+      TimerReset() => 'sounds/toggle.mp3',
+      TimerStarted() => 'sounds/toggle.mp3',
       _ => '',
     };
 

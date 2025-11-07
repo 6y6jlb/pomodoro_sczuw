@@ -39,6 +39,7 @@ class DesktopTimerService implements TimerService {
 
     _startTimer();
 
+    _controller.add(const TimerStarted());
     _controller.add(TimerTick(remainingSeconds: _remainingSeconds, totalSeconds: _totalSeconds));
   }
 

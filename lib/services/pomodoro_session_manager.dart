@@ -33,7 +33,10 @@ class PomodoroSessionManager {
   void Function()? onSessionResumed;
 
   void _handleTimerEvent(TimerEvent event) {
+    _soundService.playSound(event);
+
     switch (event) {
+
       case TimerTick(:final remainingSeconds, :final totalSeconds):
         _updateSession(_currentSession.copyWith(currentSeconds: remainingSeconds, totalSeconds: totalSeconds));
         onSessionTick?.call(_currentSession);
@@ -54,11 +57,13 @@ class PomodoroSessionManager {
 
       case TimerReset(:final newDurationSeconds):
         _updateSession(_currentSession.copyWith(currentSeconds: newDurationSeconds, totalSeconds: newDurationSeconds));
+    
+      default:
+        break;
     }
   }
 
   void _handleSessionComplete() {
-
     onSessionCompleted?.call(_currentSession.state);
 
     final nextSession = _currentSession.changeStateToNext();

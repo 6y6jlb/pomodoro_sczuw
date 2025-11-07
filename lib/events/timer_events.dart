@@ -30,6 +30,13 @@ class TimerCompleted extends TimerEvent {
   String toString() => 'TimerCompleted()';
 }
 
+class TimerStarted extends TimerEvent {
+  const TimerStarted();
+
+  @override
+  String toString() => 'TimerStarted()';
+}
+
 class TimerPaused extends TimerEvent {
   const TimerPaused();
 
