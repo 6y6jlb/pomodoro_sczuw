@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:pomodoro_sczuw/services/abstract/timer_service.dart';
 import 'package:pomodoro_sczuw/events/timer_events.dart';
 
-/// Реализация таймера для desktop платформы
-/// Знает только о времени, не содержит Pomodoro бизнес-логики
 class DesktopTimerService implements TimerService {
   Timer? _timer;
   late final StreamController<TimerEvent> _controller;
@@ -41,7 +39,6 @@ class DesktopTimerService implements TimerService {
 
     _startTimer();
 
-    // Сразу отправляем первое событие
     _controller.add(TimerTick(remainingSeconds: _remainingSeconds, totalSeconds: _totalSeconds));
   }
 
@@ -81,7 +78,6 @@ class DesktopTimerService implements TimerService {
 
     _controller.add(TimerReset(newDurationSeconds: _totalSeconds));
 
-    // Если таймер был запущен, возобновляем с новым временем
     if (_isRunning) {
       _startTimer();
       _controller.add(TimerTick(remainingSeconds: _remainingSeconds, totalSeconds: _totalSeconds));

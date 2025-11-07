@@ -11,9 +11,6 @@ class TimerNotifier extends StreamNotifier<PomodoroSession> {
   Stream<PomodoroSession> build() {
     _sessionManager = ref.read(pomodoroSessionManagerProvider);
 
-    // SessionManager уже настроен с callback'ами для уведомлений в service_providers.dart
-    // Поэтому не нужно дублировать логику уведомлений здесь
-
     return _sessionManager.onSessionChange;
   }
 

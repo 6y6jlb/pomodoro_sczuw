@@ -1,9 +1,7 @@
-/// События таймера для event-driven архитектуры
 sealed class TimerEvent {
   const TimerEvent();
 }
 
-/// Событие тика таймера с обновлением времени
 class TimerTick extends TimerEvent {
   final int remainingSeconds;
   final int totalSeconds;
@@ -25,7 +23,6 @@ class TimerTick extends TimerEvent {
   int get hashCode => remainingSeconds.hashCode ^ totalSeconds.hashCode;
 }
 
-/// Событие завершения таймера
 class TimerCompleted extends TimerEvent {
   const TimerCompleted();
 
@@ -33,7 +30,6 @@ class TimerCompleted extends TimerEvent {
   String toString() => 'TimerCompleted()';
 }
 
-/// Событие паузы таймера
 class TimerPaused extends TimerEvent {
   const TimerPaused();
 
@@ -41,7 +37,6 @@ class TimerPaused extends TimerEvent {
   String toString() => 'TimerPaused()';
 }
 
-/// Событие возобновления таймера
 class TimerResumed extends TimerEvent {
   const TimerResumed();
 
@@ -49,7 +44,6 @@ class TimerResumed extends TimerEvent {
   String toString() => 'TimerResumed()';
 }
 
-/// Событие остановки таймера
 class TimerStopped extends TimerEvent {
   const TimerStopped();
 
@@ -57,7 +51,6 @@ class TimerStopped extends TimerEvent {
   String toString() => 'TimerStopped()';
 }
 
-/// Событие сброса таймера
 class TimerReset extends TimerEvent {
   final int newDurationSeconds;
 

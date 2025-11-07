@@ -43,6 +43,7 @@ dependencies:
   dio: ^5.9.0
   riverpod_lint: ^3.0.3
   flutter_local_notifications: ^19.5.0
+  audioplayers: ^6.5.1
 
 dev_dependencies:
   flutter_test:
@@ -71,12 +72,17 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/sounds/
     - assets/images/pomodoro_app_icon_red.png
     - assets/images/pomodoro_app_icon_green.png
     - assets/images/pomodoro_app_icon_yellow.png
     - assets/images/pomodoro_app_icon_purple.png
     - assets/images/pomodoro_app_icon_gray.png
     - assets/images/pomodoro_app_icon_blue.png
+    - assets/sounds/request.mp3
+    - assets/sounds/toggle.mp3
+    - assets/sounds/default.mp3
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
