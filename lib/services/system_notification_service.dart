@@ -51,59 +51,46 @@ class SystemNotificationService {
   }
 
   String _getStateChangeTitle(SessionState newState, SessionState? previousState) {
-    final l10n = L10n();
     switch (newState) {
       case SessionState.activity:
-        return l10n.safeGetText((t) => t.notification_activity_title, 'Pomodoro - Work Time! 🍅');
+        return L10n().t.notification_activity_title;
       case SessionState.rest:
-        return l10n.safeGetText((t) => t.notification_rest_title, 'Pomodoro - Break Time! ☕');
+        return L10n().t.notification_rest_title;
       case SessionState.inactivity:
-        return l10n.safeGetText((t) => t.notification_inactivity_title, 'Pomodoro - Stopped');
+        return L10n().t.notification_inactivity_title;
     }
   }
 
   String _getStateChangeBody(SessionState state) {
-    final l10n = L10n();
     switch (state) {
       case SessionState.activity:
-        return l10n.safeGetText((t) => t.notification_activity_body, 'Work session is starting. Focus on your task!');
+        return L10n().t.notification_activity_body;
       case SessionState.rest:
-        return l10n.safeGetText((t) => t.notification_rest_body, 'Break is starting. Relax and rest!');
+        return L10n().t.notification_rest_body;
       case SessionState.inactivity:
-        return l10n.safeGetText(
-          (t) => t.notification_inactivity_body,
-          'Timer is stopped. Ready to start a new session?',
-        );
+        return L10n().t.notification_inactivity_body;
     }
   }
 
   String _getSessionCompleteTitle(SessionState completedState) {
-    final l10n = L10n();
     switch (completedState) {
       case SessionState.activity:
-        return l10n.safeGetText((t) => t.notification_activity_complete_title, 'Work session completed! ✅');
+        return L10n().t.notification_activity_complete_title;
       case SessionState.rest:
-        return l10n.safeGetText((t) => t.notification_rest_complete_title, 'Break completed! 🔄');
+        return L10n().t.notification_rest_complete_title;
       case SessionState.inactivity:
-        return l10n.safeGetText((t) => t.notification_inactivity_complete_title, 'Session completed');
+        return L10n().t.notification_inactivity_complete_title;
     }
   }
 
   String _getSessionCompleteBody(SessionState completedState) {
-    final l10n = L10n();
     switch (completedState) {
       case SessionState.activity:
-        return l10n.safeGetText(
-          (t) => t.notification_activity_complete_body,
-          'Great work! Time for a well-deserved break.',
-        );
+        return L10n().t.notification_activity_complete_body;
       case SessionState.rest:
-        return l10n.safeGetText(
-          (t) => t.notification_rest_complete_body,
-          'Rest is over. Ready for a new work session?',
-        );
+        return L10n().t.notification_rest_complete_body;
       case SessionState.inactivity:
-        return l10n.safeGetText((t) => t.notification_inactivity_complete_body, 'Ready to start a new session?');
+        return L10n().t.notification_inactivity_complete_body;
     }
   }
 }
