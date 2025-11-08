@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_sczuw/theme/timer_colors.dart';
-import 'package:pomodoro_sczuw/services/i_10n.dart';
+import 'package:pomodoro_sczuw/services/l10n.dart';
 import 'package:pomodoro_sczuw/utils/consts/settings_constant.dart';
 
 enum SessionState { rest, activity, inactivity }
@@ -14,22 +14,22 @@ extension HasTimer on SessionState {
 extension Label on SessionState {
   String label() {
     var labels = {
-      SessionState.activity: I10n().t.timerStateLabel_activity,
-      SessionState.inactivity: I10n().t.timerStateLabel_inactivity,
-      SessionState.rest: I10n().t.timerStateLabel_rest,
+      SessionState.activity: L10n().t.timerStateLabel_activity,
+      SessionState.inactivity: L10n().t.timerStateLabel_inactivity,
+      SessionState.rest: L10n().t.timerStateLabel_rest,
     };
-    return labels[this] ?? I10n().t.timerStateLabel_unknown;
+    return labels[this] ?? L10n().t.timerStateLabel_unknown;
   }
 }
 
 extension ActionLabel on SessionState {
   String actionLabel() {
     var labels = {
-      SessionState.activity: I10n().t.action_start,
-      SessionState.inactivity: I10n().t.action_stop,
-      SessionState.rest: I10n().t.action_break,
+      SessionState.activity: L10n().t.action_start,
+      SessionState.inactivity: L10n().t.action_stop,
+      SessionState.rest: L10n().t.action_break,
     };
-    return labels[this] ?? I10n().t.action_unknown;
+    return labels[this] ?? L10n().t.action_unknown;
   }
 }
 

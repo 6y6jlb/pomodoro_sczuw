@@ -8,9 +8,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
 
-  // Инициализируем сервис уведомлений
-  final notificationService = SystemNotificationService();
-  await notificationService.initialize();
-
+  await SystemNotificationService().initialize();
   runApp(const ProviderScope(child: App()));
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_sczuw/utils/styles/app_text_styles.dart';
 import 'package:pomodoro_sczuw/providers/random_joke_provider.dart';
-import 'package:pomodoro_sczuw/services/i_10n.dart';
+import 'package:pomodoro_sczuw/services/l10n.dart';
 
 class JokeWidget extends ConsumerStatefulWidget {
   final Color textColor;
@@ -70,7 +70,7 @@ class _JokeWidgetState extends ConsumerState<JokeWidget> {
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [const Icon(Icons.error), const SizedBox(width: 10), Text(I10n().t.error_retry)],
+            children: [const Icon(Icons.error), const SizedBox(width: 10), Text(L10n().t.error_retry)],
           ),
         ),
       ),

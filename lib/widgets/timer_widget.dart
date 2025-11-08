@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_sczuw/providers/session_provider.dart';
-import 'package:pomodoro_sczuw/services/i_10n.dart';
+import 'package:pomodoro_sczuw/services/l10n.dart';
 import 'package:pomodoro_sczuw/theme/timer_colors.dart';
 import 'package:pomodoro_sczuw/utils/styles/app_text_styles.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
@@ -23,7 +23,7 @@ class TimerWidget extends ConsumerWidget {
         return ElevatedButton(
           style: commonButtonStyles.copyWith(backgroundColor: WidgetStateProperty.all(timerColors.inactivity)),
           onPressed: null,
-          child: Text(I10n().t.action_stop, style: AppTextStyles.action.copyWith(color: Colors.blueGrey[200])),
+          child: Text(L10n().t.action_stop, style: AppTextStyles.action.copyWith(color: Colors.blueGrey[200])),
         );
       }
 
@@ -37,19 +37,19 @@ class TimerWidget extends ConsumerWidget {
                 ElevatedButton(
                   style: commonButtonStyles.copyWith(backgroundColor: WidgetStateProperty.all(timerColors.pause)),
                   onPressed: () => timerNotifier.pause(),
-                  child: Text(I10n().t.action_pause, style: AppTextStyles.action.copyWith(color: Colors.white)),
+                  child: Text(L10n().t.action_pause, style: AppTextStyles.action.copyWith(color: Colors.white)),
                 ),
               if (timer.state.hasTimer() && timer.isPaused && timer.currentSeconds > 0)
                 ElevatedButton(
                   style: commonButtonStyles.copyWith(backgroundColor: WidgetStateProperty.all(timerColors.resume)),
                   onPressed: () => timerNotifier.resume(),
-                  child: Text(I10n().t.action_resume, style: AppTextStyles.action.copyWith(color: Colors.white)),
+                  child: Text(L10n().t.action_resume, style: AppTextStyles.action.copyWith(color: Colors.white)),
                 ),
               const SizedBox(width: 8),
               ElevatedButton(
                 style: commonButtonStyles.copyWith(backgroundColor: WidgetStateProperty.all(timerColors.inactivity)),
                 onPressed: () => timerNotifier.changeStateToInactivity(),
-                child: Text(I10n().t.action_stop, style: AppTextStyles.action.copyWith(color: Colors.white)),
+                child: Text(L10n().t.action_stop, style: AppTextStyles.action.copyWith(color: Colors.white)),
               ),
             ],
           ),
@@ -57,7 +57,7 @@ class TimerWidget extends ConsumerWidget {
           ElevatedButton(
             style: commonButtonStyles.copyWith(backgroundColor: WidgetStateProperty.all(timerColors.postpone)),
             onPressed: () => timerNotifier.postpone(),
-            child: Text(I10n().t.action_postpone, style: AppTextStyles.action.copyWith(color: Colors.white)),
+            child: Text(L10n().t.action_postpone, style: AppTextStyles.action.copyWith(color: Colors.white)),
           ),
         ],
       );

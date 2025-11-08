@@ -5,7 +5,7 @@ import 'package:pomodoro_sczuw/l10n/app_localizations.dart';
 import 'package:pomodoro_sczuw/models/pomodoro_session.dart';
 import 'package:pomodoro_sczuw/providers/timer_provider.dart';
 import 'package:pomodoro_sczuw/screens/home_screen.dart';
-import 'package:pomodoro_sczuw/services/i_10n.dart';
+import 'package:pomodoro_sczuw/services/l10n.dart';
 import 'package:pomodoro_sczuw/theme/alert_colors.dart';
 import 'package:pomodoro_sczuw/theme/timer_colors.dart';
 import 'package:tray_manager/tray_manager.dart';
@@ -179,7 +179,7 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
       },
       builder: (context, child) {
         // Инициализация сервиса локализации
-        I10n().initialize(context);
+        L10n().initialize(context);
         return child!;
       },
     );

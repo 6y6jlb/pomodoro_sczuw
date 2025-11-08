@@ -1,6 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
-import 'package:pomodoro_sczuw/services/i_10n.dart';
+import 'package:pomodoro_sczuw/services/l10n.dart';
 
 class SystemNotificationService {
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -51,26 +51,26 @@ class SystemNotificationService {
   }
 
   String _getStateChangeTitle(SessionState newState, SessionState? previousState) {
-    final i10n = I10n();
+    final l10n = L10n();
     switch (newState) {
       case SessionState.activity:
-        return i10n.safeGetText((t) => t.notification_activity_title, 'Pomodoro - Work Time! 🍅');
+        return l10n.safeGetText((t) => t.notification_activity_title, 'Pomodoro - Work Time! 🍅');
       case SessionState.rest:
-        return i10n.safeGetText((t) => t.notification_rest_title, 'Pomodoro - Break Time! ☕');
+        return l10n.safeGetText((t) => t.notification_rest_title, 'Pomodoro - Break Time! ☕');
       case SessionState.inactivity:
-        return i10n.safeGetText((t) => t.notification_inactivity_title, 'Pomodoro - Stopped');
+        return l10n.safeGetText((t) => t.notification_inactivity_title, 'Pomodoro - Stopped');
     }
   }
 
   String _getStateChangeBody(SessionState state) {
-    final i10n = I10n();
+    final l10n = L10n();
     switch (state) {
       case SessionState.activity:
-        return i10n.safeGetText((t) => t.notification_activity_body, 'Work session is starting. Focus on your task!');
+        return l10n.safeGetText((t) => t.notification_activity_body, 'Work session is starting. Focus on your task!');
       case SessionState.rest:
-        return i10n.safeGetText((t) => t.notification_rest_body, 'Break is starting. Relax and rest!');
+        return l10n.safeGetText((t) => t.notification_rest_body, 'Break is starting. Relax and rest!');
       case SessionState.inactivity:
-        return i10n.safeGetText(
+        return l10n.safeGetText(
           (t) => t.notification_inactivity_body,
           'Timer is stopped. Ready to start a new session?',
         );
@@ -78,32 +78,32 @@ class SystemNotificationService {
   }
 
   String _getSessionCompleteTitle(SessionState completedState) {
-    final i10n = I10n();
+    final l10n = L10n();
     switch (completedState) {
       case SessionState.activity:
-        return i10n.safeGetText((t) => t.notification_activity_complete_title, 'Work session completed! ✅');
+        return l10n.safeGetText((t) => t.notification_activity_complete_title, 'Work session completed! ✅');
       case SessionState.rest:
-        return i10n.safeGetText((t) => t.notification_rest_complete_title, 'Break completed! 🔄');
+        return l10n.safeGetText((t) => t.notification_rest_complete_title, 'Break completed! 🔄');
       case SessionState.inactivity:
-        return i10n.safeGetText((t) => t.notification_inactivity_complete_title, 'Session completed');
+        return l10n.safeGetText((t) => t.notification_inactivity_complete_title, 'Session completed');
     }
   }
 
   String _getSessionCompleteBody(SessionState completedState) {
-    final i10n = I10n();
+    final l10n = L10n();
     switch (completedState) {
       case SessionState.activity:
-        return i10n.safeGetText(
+        return l10n.safeGetText(
           (t) => t.notification_activity_complete_body,
           'Great work! Time for a well-deserved break.',
         );
       case SessionState.rest:
-        return i10n.safeGetText(
+        return l10n.safeGetText(
           (t) => t.notification_rest_complete_body,
           'Rest is over. Ready for a new work session?',
         );
       case SessionState.inactivity:
-        return i10n.safeGetText((t) => t.notification_inactivity_complete_body, 'Ready to start a new session?');
+        return l10n.safeGetText((t) => t.notification_inactivity_complete_body, 'Ready to start a new session?');
     }
   }
 }

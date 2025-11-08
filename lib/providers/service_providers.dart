@@ -2,8 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_sczuw/services/abstract/timer_service.dart';
 import 'package:pomodoro_sczuw/services/desktop_timer_service.dart';
 import 'package:pomodoro_sczuw/services/pomodoro_session_manager.dart';
-import 'package:pomodoro_sczuw/services/system_notification_service.dart';
 import 'package:pomodoro_sczuw/services/sound_service.dart';
+import 'package:pomodoro_sczuw/services/system_notification_service.dart';
 import 'package:pomodoro_sczuw/services/events_sound_service.dart';
 
 final timerServiceProvider = Provider<TimerService>((ref) {
