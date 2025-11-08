@@ -10,8 +10,14 @@ class SoundService {
     _isEnabled = enabled;
   }
 
-  Future<void> playSound(AssetSource path) async {
-    if (!_isEnabled) return;
+  Future<void> playSound(String soundKey) async {
+    final path = switch (soundKey) {
+      'request' => AssetSource('sounds/request.mp3'),
+      'toggle' => AssetSource('sounds/toggle.mp3'),
+      _ => null,
+    };
+
+    if (!_isEnabled || path == null) return;
 
     try {
       await _audioPlayer.play(path);

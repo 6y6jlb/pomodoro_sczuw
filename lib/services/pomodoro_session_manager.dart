@@ -3,12 +3,12 @@ import 'package:pomodoro_sczuw/models/pomodoro_session.dart';
 import 'package:pomodoro_sczuw/services/abstract/timer_service.dart';
 import 'package:pomodoro_sczuw/events/timer_events.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
-import 'package:pomodoro_sczuw/services/events_sound_service.dart';
+import 'package:pomodoro_sczuw/services/sound_service.dart';
 
 class PomodoroSessionManager {
   final TimerService _timerService;
   final StreamController<PomodoroSession> _sessionController;
-  final EventsSoundService _soundService;
+  final SoundService _soundService;
 
   PomodoroSession _currentSession = PomodoroSession.initial();
   StreamSubscription<TimerEvent>? _timerSubscription;
@@ -33,10 +33,7 @@ class PomodoroSessionManager {
   void Function()? onSessionResumed;
 
   void _handleTimerEvent(TimerEvent event) {
-    _soundService.playSound(event);
-
     switch (event) {
-
       case TimerTick(:final remainingSeconds, :final totalSeconds):
         _updateSession(_currentSession.copyWith(currentSeconds: remainingSeconds, totalSeconds: totalSeconds));
         onSessionTick?.call(_currentSession);
@@ -57,7 +54,7 @@ class PomodoroSessionManager {
 
       case TimerReset(:final newDurationSeconds):
         _updateSession(_currentSession.copyWith(currentSeconds: newDurationSeconds, totalSeconds: newDurationSeconds));
-    
+
       default:
         break;
     }
@@ -68,6 +65,7 @@ class PomodoroSessionManager {
 
     final nextSession = _currentSession.changeStateToNext();
     changeState(nextSession.state);
+    _soundService.playSound('request');
   }
 
   void _updateSession(PomodoroSession session) {
