@@ -9,6 +9,7 @@
     "pomodoroModeLabel_schedule": "Расписание",
     "operationModeLabel": "Режим:",
     "sessionDurationLabel": "Длительность сессии:",
+    "restDurationLabel": "Длительность перерыва:",
     "action_stop": "Стоп",
     "action_start": "Старт",
     "action_continue": "Продолжить",

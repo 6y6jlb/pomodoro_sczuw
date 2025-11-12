@@ -3,6 +3,8 @@ import 'package:pomodoro_sczuw/models/pomodoro_session.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
 import 'package:pomodoro_sczuw/providers/timer_provider.dart';
 import 'package:pomodoro_sczuw/providers/service_providers.dart';
+import 'package:pomodoro_sczuw/services/pomodoro_session_manager.dart';
+import 'package:pomodoro_sczuw/providers/pomodoro_settings_provider.dart';
 
 class SessionNotifier extends Notifier<PomodoroSession> {
   @override
@@ -63,4 +65,38 @@ class SessionNotifier extends Notifier<PomodoroSession> {
 
 final sessionProvider = NotifierProvider<SessionNotifier, PomodoroSession>(() {
   return SessionNotifier();
+});
+
+final pomodoroSessionManagerProvider = Provider<PomodoroSessionManager>((ref) {
+  final timerService = ref.read(timerServiceProvider);
+  final soundService = ref.read(soundServiceProvider);
+  final settings = ref.read(pomodoroSettingsProvider);
+  final sessionManager = PomodoroSessionManager(timerService, soundService, settings);
+  final notificationService = ref.read(systemNotificationServiceProvider);
+
+  ref.listen(pomodoroSettingsProvider, (previous, next) {
+    sessionManager.updateSettings(next);
+  });
+
+  sessionManager.onStateChanged = (newState, previousState) {
+    try {
+      notificationService.showStateChangeNotification(newState, previousState);
+    } catch (e) {
+      print('Error sending state change notification: $e');
+    }
+  };
+
+  sessionManager.onSessionCompleted = (completedState) {
+    try {
+      notificationService.showSessionCompleteNotification(completedState);
+    } catch (e) {
+      print('Error sending session complete notification: $e');
+    }
+  };
+
+  ref.onDispose(() {
+    sessionManager.dispose();
+  });
+
+  return sessionManager;
 });

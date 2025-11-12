@@ -82,3 +82,11 @@ extension NextState on SessionState {
 extension DefaultSessionDuration on SessionState {
   int get defaultDuration => SettingsConstant.sessionDurationInSeconds[this]!;
 }
+
+extension MinSessionDuration on SessionState {
+  int get minDuration => SettingsConstant.minSessionDurationInSeconds[this]!;
+}
+
+extension MaxSessionDuration on SessionState {
+  int get maxDuration => SettingsConstant.maxSessionDurationInSeconds[this]!;
+}

@@ -149,6 +149,12 @@ abstract class AppLocalizations {
   /// **'Session duration:'**
   String get sessionDurationLabel;
 
+  /// No description provided for @restDurationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest duration:'**
+  String get restDurationLabel;
+
   /// No description provided for @action_stop.
   ///
   /// In en, this message translates to:

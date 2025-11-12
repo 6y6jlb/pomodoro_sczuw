@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_sczuw/models/pomodoro_session.dart';
 import 'package:pomodoro_sczuw/services/pomodoro_session_manager.dart';
-import 'package:pomodoro_sczuw/providers/service_providers.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
+import 'package:pomodoro_sczuw/providers/session_provider.dart';
 
 class TimerNotifier extends StreamNotifier<PomodoroSession> {
   late final PomodoroSessionManager _sessionManager;

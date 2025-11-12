@@ -4,16 +4,18 @@ import 'package:pomodoro_sczuw/services/abstract/timer_service.dart';
 import 'package:pomodoro_sczuw/events/timer_events.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
 import 'package:pomodoro_sczuw/services/sound_service.dart';
+import 'package:pomodoro_sczuw/models/pomodoro_settings.dart';
 
 class PomodoroSessionManager {
   final TimerService _timerService;
   final StreamController<PomodoroSession> _sessionController;
   final SoundService _soundService;
+  PomodoroSettings _settings;
 
   PomodoroSession _currentSession = PomodoroSession.initial();
   StreamSubscription<TimerEvent>? _timerSubscription;
 
-  PomodoroSessionManager(this._timerService, this._soundService)
+  PomodoroSessionManager(this._timerService, this._soundService, this._settings)
     : _sessionController = StreamController<PomodoroSession>.broadcast() {
     _timerSubscription = _timerService.onTimerEvent.listen(_handleTimerEvent);
   }
@@ -21,6 +23,11 @@ class PomodoroSessionManager {
   Stream<PomodoroSession> get onSessionChange => _sessionController.stream;
 
   PomodoroSession get currentSession => _currentSession;
+  PomodoroSettings get settings => _settings;
+
+  void updateSettings(PomodoroSettings newSettings) {
+    _settings = newSettings;
+  }
 
   void Function(SessionState newState, SessionState? previousState)? onStateChanged;
 
@@ -31,6 +38,17 @@ class PomodoroSessionManager {
   void Function()? onSessionPaused;
 
   void Function()? onSessionResumed;
+
+  int _getDurationForState(SessionState state) {
+    switch (state) {
+      case SessionState.activity:
+        return _settings.sessionDuration;
+      case SessionState.rest:
+        return _settings.breakDuration;
+      case SessionState.inactivity:
+        return 0;
+    }
+  }
 
   void _handleTimerEvent(TimerEvent event) {
     switch (event) {
@@ -63,8 +81,8 @@ class PomodoroSessionManager {
   void _handleSessionComplete() {
     onSessionCompleted?.call(_currentSession.state);
 
-    final nextSession = _currentSession.changeStateToNext();
-    changeState(nextSession.state);
+    final nextState = _currentSession.state.next();
+    changeState(nextState);
     _soundService.playSound('request');
   }
 
@@ -75,7 +93,8 @@ class PomodoroSessionManager {
 
   void changeState(SessionState newState) {
     final previousState = _currentSession.state;
-    final newSession = _currentSession.changeState(newState);
+    final duration = _getDurationForState(newState);
+    final newSession = _currentSession.changeState(newState, duration);
 
     _updateSession(newSession);
 
@@ -131,7 +150,8 @@ class PomodoroSessionManager {
   }
 
   Future<void> reset() async {
-    final resetSession = _currentSession.reset();
+    final duration = _getDurationForState(_currentSession.state);
+    final resetSession = _currentSession.reset(duration);
     _updateSession(resetSession);
 
     if (resetSession.state.hasTimer() && !resetSession.isPaused) {

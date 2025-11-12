@@ -27,17 +27,16 @@ class PomodoroSession {
     );
   }
 
-  PomodoroSession changeState(SessionState newState) {
-    final duration = newState.defaultDuration;
+  PomodoroSession changeState(SessionState newState, int duration) {
     return copyWith(state: newState, currentSeconds: duration, totalSeconds: duration, isPaused: false);
   }
 
-  PomodoroSession changeStateToNext() {
-    return changeState(state.next());
+  PomodoroSession changeStateToNext(int duration) {
+    return changeState(state.next(), duration);
   }
 
   PomodoroSession changeStateToInactivity() {
-    return changeState(SessionState.inactivity);
+    return changeState(SessionState.inactivity, 0);
   }
 
   PomodoroSession tick() {
@@ -53,8 +52,7 @@ class PomodoroSession {
     return copyWith(isPaused: false);
   }
 
-  PomodoroSession reset() {
-    final duration = state.defaultDuration;
+  PomodoroSession reset(int duration) {
     return copyWith(currentSeconds: duration, totalSeconds: duration, isPaused: true);
   }
 

@@ -36,6 +36,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sessionDurationLabel => 'Session duration:';
 
   @override
+  String get restDurationLabel => 'Rest duration:';
+
+  @override
   String get action_stop => 'Stop';
 
   @override

@@ -6,6 +6,8 @@ import 'package:pomodoro_sczuw/utils/styles/app_text_styles.dart';
 import 'package:pomodoro_sczuw/widgets/joke_widget.dart';
 import 'package:pomodoro_sczuw/widgets/timer_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pomodoro_sczuw/screens/settings_screen.dart';
+import 'package:flutter/material.dart' as material;
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -18,6 +20,14 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(timer.state.label(), style: AppTextStyles.title),
         backgroundColor: timer.state.colorLevel(timerColors),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsScreen()));
+            },
+            icon: material.Icon(material.Icons.settings),
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
