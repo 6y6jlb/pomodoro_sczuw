@@ -32,11 +32,11 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
     trayManager.setContextMenu(
       Menu(
         items: [
-          MenuItem(key: 'show_window', label: L10n().t.action_showWindow),
+          MenuItem(key: 'show_window', label: 'Show window'),
           MenuItem.separator(),
-          MenuItem(key: 'exit_app', label: L10n().t.action_exitApp),
+          MenuItem(key: 'exit_app', label: 'Exit app'),
           MenuItem.separator(),
-          MenuItem(key: 'collapse_window', label: L10n().t.action_collapseWindow),
+          MenuItem(key: 'collapse_window', label: 'Collapse window'),
         ],
       ),
     );
