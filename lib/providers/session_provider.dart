@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_sczuw/models/pomodoro_session.dart';
+import 'package:pomodoro_sczuw/models/pomodoro_settings.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
 import 'package:pomodoro_sczuw/providers/timer_provider.dart';
 import 'package:pomodoro_sczuw/providers/service_providers.dart';
@@ -70,12 +71,21 @@ final sessionProvider = NotifierProvider<SessionNotifier, PomodoroSession>(() {
 final pomodoroSessionManagerProvider = Provider<PomodoroSessionManager>((ref) {
   final timerService = ref.read(timerServiceProvider);
   final soundService = ref.read(soundServiceProvider);
-  final settings = ref.read(pomodoroSettingsProvider);
-  final sessionManager = PomodoroSessionManager(timerService, soundService, settings);
+
+  final settingsAsync = ref.read(pomodoroSettingsProvider);
+  final initialSettings = settingsAsync.when(
+    data: (value) => value,
+    loading: () => PomodoroSettings.initial(),
+    error: (error, stack) => PomodoroSettings.initial(),
+  );
+
+  final sessionManager = PomodoroSessionManager(timerService, soundService, initialSettings);
   final notificationService = ref.read(systemNotificationServiceProvider);
 
   ref.listen(pomodoroSettingsProvider, (previous, next) {
-    sessionManager.updateSettings(next);
+    if (next.hasValue) {
+      sessionManager.updateSettings(next.requireValue);
+    }
   });
 
   sessionManager.onStateChanged = (newState, previousState) {

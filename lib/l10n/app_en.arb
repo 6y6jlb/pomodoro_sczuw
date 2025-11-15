@@ -20,6 +20,7 @@
     "action_confirm": "Confirm",
     "action_pause": "Pause",
     "action_unknown": "Unknown",
+    "action_resetToDefaults": "Reset to defaults",
     "unitShort_minute": "min.",
     "unitShort_seconds": "s.",
     "unitShort_hours": "h.",

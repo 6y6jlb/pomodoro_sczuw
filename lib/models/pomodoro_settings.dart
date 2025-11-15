@@ -1,8 +1,14 @@
+import 'package:hive/hive.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
 
+part 'pomodoro_settings.g.dart';
 
-class PomodoroSettings {
+@HiveType(typeId: 0)
+class PomodoroSettings extends HiveObject {
+  @HiveField(0)
   final int sessionDuration;
+  
+  @HiveField(1)
   final int breakDuration;
 
   PomodoroSettings({

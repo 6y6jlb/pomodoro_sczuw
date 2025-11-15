@@ -215,6 +215,12 @@ abstract class AppLocalizations {
   /// **'Unknown'**
   String get action_unknown;
 
+  /// No description provided for @action_resetToDefaults.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to defaults'**
+  String get action_resetToDefaults;
+
   /// No description provided for @unitShort_minute.
   ///
   /// In en, this message translates to:

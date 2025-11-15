@@ -69,6 +69,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get action_unknown => 'Неизвестно';
 
   @override
+  String get action_resetToDefaults => 'Сбросить настройки';
+
+  @override
   String get unitShort_minute => 'мин.';
 
   @override

@@ -69,6 +69,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_unknown => 'Unknown';
 
   @override
+  String get action_resetToDefaults => 'Reset to defaults';
+
+  @override
   String get unitShort_minute => 'min.';
 
   @override
