@@ -32,9 +32,11 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
     trayManager.setContextMenu(
       Menu(
         items: [
-          MenuItem(key: 'show_window', label: 'Show Window'),
+          MenuItem(key: 'show_window', label: L10n().t.action_showWindow),
           MenuItem.separator(),
-          MenuItem(key: 'exit_app', label: 'Exit App'),
+          MenuItem(key: 'exit_app', label: L10n().t.action_exitApp),
+          MenuItem.separator(),
+          MenuItem(key: 'collapse_window', label: L10n().t.action_collapseWindow),
         ],
       ),
     );
@@ -102,6 +104,8 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
       windowManager.focus();
     } else if (menuItem.key == 'exit_app') {
       windowManager.destroy();
+    } else if (menuItem.key == 'collapse_window') {
+      windowManager.minimize();
     }
   }
 

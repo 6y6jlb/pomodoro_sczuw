@@ -221,6 +221,24 @@ abstract class AppLocalizations {
   /// **'Reset to defaults'**
   String get action_resetToDefaults;
 
+  /// No description provided for @action_collapseWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse window'**
+  String get action_collapseWindow;
+
+  /// No description provided for @action_exitApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit app'**
+  String get action_exitApp;
+
+  /// No description provided for @action_showWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show window'**
+  String get action_showWindow;
+
   /// No description provided for @unitShort_minute.
   ///
   /// In en, this message translates to:

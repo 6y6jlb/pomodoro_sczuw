@@ -72,6 +72,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_resetToDefaults => 'Reset to defaults';
 
   @override
+  String get action_collapseWindow => 'Collapse window';
+
+  @override
+  String get action_exitApp => 'Exit app';
+
+  @override
+  String get action_showWindow => 'Show window';
+
+  @override
   String get unitShort_minute => 'min.';
 
   @override

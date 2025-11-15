@@ -72,6 +72,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get action_resetToDefaults => 'Сбросить настройки';
 
   @override
+  String get action_collapseWindow => 'Свернуть окно';
+
+  @override
+  String get action_exitApp => 'Выйти из приложения';
+
+  @override
+  String get action_showWindow => 'Показать окно';
+
+  @override
   String get unitShort_minute => 'мин.';
 
   @override
