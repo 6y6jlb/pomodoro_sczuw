@@ -51,7 +51,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_resume => 'Resume';
 
   @override
-  String get action_postpone => '+5min';
+  String action_postpone(Object duration) {
+    return '+$duration';
+  }
 
   @override
   String get action_rest => 'Rest';

@@ -182,8 +182,8 @@ abstract class AppLocalizations {
   /// No description provided for @action_postpone.
   ///
   /// In en, this message translates to:
-  /// **'+5min'**
-  String get action_postpone;
+  /// **'+{duration}'**
+  String action_postpone(Object duration);
 
   /// No description provided for @action_rest.
   ///

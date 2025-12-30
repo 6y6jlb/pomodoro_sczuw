@@ -130,8 +130,8 @@ class PomodoroSessionManager {
     _timerService.pause();
   }
 
-  Future<void> postpone() async {
-    final postponedSession = _currentSession.postpone();
+  Future<void> postpone(int duration) async {
+    final postponedSession = _currentSession.postpone(duration);
     _updateSession(postponedSession);
 
     if (postponedSession.state.hasTimer()) {

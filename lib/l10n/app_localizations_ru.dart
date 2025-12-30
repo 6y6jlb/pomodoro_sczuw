@@ -51,7 +51,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get action_resume => 'Возобновить';
 
   @override
-  String get action_postpone => '+5мин';
+  String action_postpone(Object duration) {
+    return '+$duration';
+  }
 
   @override
   String get action_rest => 'Перерыв';

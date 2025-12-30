@@ -43,8 +43,8 @@ class SessionNotifier extends Notifier<PomodoroSession> {
     ref.read(soundServiceProvider).playSound('toggle');
   }
 
-  Future<void> postpone() async {
-    await ref.read(timerProvider.notifier).postpone();
+  Future<void> postpone(int duration) async {
+    await ref.read(timerProvider.notifier).postpone(duration);
     ref.read(soundServiceProvider).playSound('toggle');
   }
 

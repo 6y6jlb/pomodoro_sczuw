@@ -18,7 +18,7 @@
     "action_collapseWindow": "Свернуть окно",
     "action_exitApp": "Выйти из приложения",
     "action_showWindow": "Показать окно",
-    "action_postpone": "+5мин",
+    "action_postpone": "+{duration}",
     "action_rest": "Перерыв",
     "action_break": "Отдых",
     "action_confirm": "Подтвердить",

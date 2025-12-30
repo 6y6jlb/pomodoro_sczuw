@@ -19,5 +19,5 @@ class SettingsConstant {
     SessionState.inactivity: 0,
   };
 
-  static const int postponedSeconds = 300;
+  static const List<int> defaultPostponeValues = [300, 600, 1800, 3600];
 }

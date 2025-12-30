@@ -56,10 +56,10 @@ class PomodoroSession {
     return copyWith(currentSeconds: duration, totalSeconds: duration, isPaused: true);
   }
 
-  PomodoroSession postpone() {
+  PomodoroSession postpone(int duration) {
     return copyWith(
-      currentSeconds: currentSeconds + SettingsConstant.postponedSeconds,
-      totalSeconds: totalSeconds + SettingsConstant.postponedSeconds,
+      currentSeconds: currentSeconds + duration,
+      totalSeconds: totalSeconds + duration,
     );
   }
 
