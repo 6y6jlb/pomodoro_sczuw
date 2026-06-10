@@ -81,6 +81,7 @@ final pomodoroSessionManagerProvider = Provider<PomodoroSessionManager>((ref) {
 
   final sessionManager = PomodoroSessionManager(timerService, soundService, initialSettings);
   final notificationService = ref.read(systemNotificationServiceProvider);
+  final sideEffectManager = ref.read(sideEffectManagerProvider);
 
   ref.listen(pomodoroSettingsProvider, (previous, next) {
     if (next.hasValue) {
@@ -94,6 +95,15 @@ final pomodoroSessionManagerProvider = Provider<PomodoroSessionManager>((ref) {
     } catch (e) {
       print('Error sending state change notification: $e');
     }
+    sideEffectManager.handleStateChanged(newState);
+  };
+
+  sessionManager.onSessionPaused = () {
+    sideEffectManager.handlePaused(sessionManager.currentSession.state);
+  };
+
+  sessionManager.onSessionResumed = () {
+    sideEffectManager.handleResumed(sessionManager.currentSession.state);
   };
 
   sessionManager.onSessionCompleted = (completedState) {

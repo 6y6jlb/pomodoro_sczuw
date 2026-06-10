@@ -45,6 +45,15 @@
 - **Files**: `request.mp3` (complete), `toggle.mp3` (actions)
 - **Future**: All platforms supported, may need audio focus on Android
 
+### State Side Effects
+- **Abstract**: `StateSideEffect` interface (`onPhaseChanged(TimerPhase)`, `dispose()`)
+- **Dispatcher**: `SideEffectManager` fans out phase changes to all registered side effects; dedupes repeated phases
+- **Phase**: `TimerPhase` enum (`activity`, `rest`, `inactivity`, `paused`) derived from `SessionState` + paused via `TimerPhaseMapping.fromState`
+- **Implementation (HTTP)**: `Esp32LedSideEffect` (uses `dio`) maps phases to ESP32 LED endpoints: activity→`/red`, rest→`/green`, paused→`/yellow`, inactivity→`/off`. Fire-and-forget with 2s timeouts; errors swallowed so the timer is never blocked
+- **Config**: `SideEffectConstant.esp32BaseUrl` (default `http://192.168.0.102`)
+- **Extensibility**: Add a new `StateSideEffect` implementation (MQTT, serial, smart bulb, ...) and register it in `sideEffectManagerProvider`
+- **Future**: All platforms supported (network/IO based)
+
 ### Dependencies
 - **Linux-specific**: `window_manager`, `tray_manager`, `flutter_local_notifications`
 - **Cross-platform**: `audioplayers`, `hive_flutter`
@@ -83,6 +92,10 @@ User Action → `SessionNotifier` → `TimerNotifier` → `PomodoroSessionManage
 ### Notifications & Sounds
 - **Notifications**: `onStateChanged` (state change), `onSessionCompleted` (timer complete)
 - **Sounds**: 'toggle' (user actions), 'request' (session complete)
+
+### Side Effects
+- **Hooks**: `onStateChanged` → `SideEffectManager.handleStateChanged`, `onSessionPaused`/`onSessionResumed` → `handlePaused`/`handleResumed`
+- Wired in `pomodoroSessionManagerProvider`; manager resolves `SessionState`(+paused) into a `TimerPhase` and dispatches to all `StateSideEffect`s (e.g. ESP32 LED via HTTP)
 
 ## Key Patterns
 - Event-driven: Timer events via streams
