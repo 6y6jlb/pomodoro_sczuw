@@ -49,7 +49,7 @@
 - **Abstract**: `StateSideEffect` interface (`onPhaseChanged(TimerPhase)`, `dispose()`)
 - **Dispatcher**: `SideEffectManager` fans out phase changes to all registered side effects; dedupes repeated phases
 - **Phase**: `TimerPhase` enum (`activity`, `rest`, `inactivity`, `paused`) derived from `SessionState` + paused via `TimerPhaseMapping.fromState`
-- **Implementation (HTTP)**: `Esp32LedSideEffect` (uses `dio`) maps phases to ESP32 LED endpoints: activity→`/red`, rest→`/green`, paused→`/yellow`, inactivity→`/off`. Fire-and-forget with 2s timeouts; errors swallowed so the timer is never blocked
+- **Implementation (HTTP)**: `Esp32LedSideEffect` (uses `dio`) on phase change: yellow `/yellow` for 0.5s then pattern — activity→steady `/green`, rest→alternate `/green`/`/yellow` every 0.5s, paused→`/yellow` immediately, inactivity→`/off`. Fire-and-forget with 2s timeouts; errors swallowed so the timer is never blocked
 - **Config**: `SideEffectConstant.esp32BaseUrl` (default `http://192.168.0.102`)
 - **Extensibility**: Add a new `StateSideEffect` implementation (MQTT, serial, smart bulb, ...) and register it in `sideEffectManagerProvider`
 - **Future**: All platforms supported (network/IO based)

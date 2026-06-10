@@ -16,15 +16,17 @@ class SideEffectManager {
   }
 
   void handlePaused(SessionState currentState) {
-    _dispatch(TimerPhaseMapping.fromState(currentState, isPaused: true));
+    final phase = TimerPhaseMapping.fromState(currentState, isPaused: true);
+    _dispatch(phase, force: true);
   }
 
   void handleResumed(SessionState currentState) {
-    _dispatch(TimerPhaseMapping.fromState(currentState, isPaused: false));
+    final phase = TimerPhaseMapping.fromState(currentState, isPaused: false);
+    _dispatch(phase, force: true);
   }
 
-  void _dispatch(TimerPhase phase) {
-    if (phase == _lastDispatchedPhase) return;
+  void _dispatch(TimerPhase phase, {bool force = false}) {
+    if (!force && phase == _lastDispatchedPhase) return;
     _lastDispatchedPhase = phase;
 
     for (final sideEffect in _sideEffects) {
