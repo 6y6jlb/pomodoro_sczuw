@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
@@ -20,7 +22,7 @@ class App extends ConsumerStatefulWidget {
 
 class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
   @override
-  initState() {
+  void initState() {
     super.initState();
     windowManager.addListener(this);
     trayManager.addListener(this);
@@ -28,8 +30,10 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
     _initWindowManager();
   }
 
-  void _initTray() {
-    trayManager.setContextMenu(
+  Future<void> _initTray() async {
+    await trayManager.setIcon(SessionState.activity.trayIcon());
+    await trayManager.setToolTip('Pomodoro');
+    await trayManager.setContextMenu(
       Menu(
         items: [
           MenuItem(key: 'show_window', label: 'Show window'),
@@ -40,11 +44,12 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
         ],
       ),
     );
-    trayManager.setIcon('assets/images/pomodoro_app_icon_red.png');
   }
 
-  void _initWindowManager() {
-    WindowOptions windowOptions = WindowOptions(
+  Future<void> _initWindowManager() async {
+    await windowManager.setPreventClose(true);
+
+    const windowOptions = WindowOptions(
       size: Size(400, 800),
       center: false,
       backgroundColor: Colors.transparent,
@@ -63,18 +68,28 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
     return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
+  Future<void> _showWindow() async {
+    await windowManager.show();
+    await windowManager.focus();
+  }
+
+  Future<void> _exitApp() async {
+    await trayManager.destroy();
+    await windowManager.destroy();
+  }
+
   void _updateTrayAttributes(PomodoroSession session) {
-    if (session.state.isInactive()) {
-      trayManager.setTitle('');
-    } else {
-      final timeString = _formatTime(session.currentSeconds);
-      trayManager.setTitle(timeString);
+    final timeString = _formatTime(session.currentSeconds);
+    final tooltip = session.state.isInactive() ? 'Pomodoro' : timeString;
+
+    if (Platform.isWindows || Platform.isMacOS) {
+      trayManager.setToolTip(tooltip);
     }
-    if (session.isPaused) {
-      trayManager.setIcon('assets/images/pomodoro_app_icon_yellow.png');
-    } else {
-      trayManager.setIcon(session.state.icon());
+    if (!Platform.isWindows) {
+      trayManager.setTitle(session.state.isInactive() ? '' : timeString);
     }
+
+    trayManager.setIcon(session.state.trayIcon(isPaused: session.isPaused));
   }
 
   @override
@@ -86,26 +101,28 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
 
   @override
   void onWindowClose() async {
-    bool isPreventClose = await windowManager.isPreventClose();
-    if (isPreventClose) {
-      await windowManager.hide();
-    }
+    await windowManager.hide();
   }
 
   @override
-  void onWindowEvent(String eventName) {
-    print('[WindowManager] onWindowEvent: $eventName');
+  void onTrayIconMouseDown() {
+    _showWindow();
+  }
+
+  @override
+  void onTrayIconRightMouseDown() {
+    trayManager.popUpContextMenu();
   }
 
   @override
   void onTrayMenuItemClick(MenuItem menuItem) {
-    if (menuItem.key == 'show_window') {
-      windowManager.show();
-      windowManager.focus();
-    } else if (menuItem.key == 'exit_app') {
-      windowManager.destroy();
-    } else if (menuItem.key == 'collapse_window') {
-      windowManager.minimize();
+    switch (menuItem.key) {
+      case 'show_window':
+        _showWindow();
+      case 'exit_app':
+        _exitApp();
+      case 'collapse_window':
+        windowManager.minimize();
     }
   }
 

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:pomodoro_sczuw/theme/timer_colors.dart';
 import 'package:pomodoro_sczuw/services/l10n.dart';
@@ -52,6 +54,18 @@ extension Icon on SessionState {
       SessionState.rest: 'assets/images/pomodoro_app_icon_green.png',
     };
     return icons[this] ?? 'assets/images/pomodoro_app_icon_gray.png';
+  }
+
+  String trayIcon({bool isPaused = false}) {
+    final baseName = isPaused
+        ? 'pomodoro_app_icon_yellow'
+        : switch (this) {
+            SessionState.activity => 'pomodoro_app_icon_red',
+            SessionState.rest => 'pomodoro_app_icon_green',
+            SessionState.inactivity => 'pomodoro_app_icon_gray',
+          };
+    final extension = Platform.isWindows ? 'ico' : 'png';
+    return 'assets/images/$baseName.$extension';
   }
 }
 

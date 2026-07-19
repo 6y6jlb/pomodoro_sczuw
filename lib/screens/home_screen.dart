@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as material;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
+import 'package:pomodoro_sczuw/providers/app_version_provider.dart';
 import 'package:pomodoro_sczuw/providers/session_provider.dart';
+import 'package:pomodoro_sczuw/screens/settings_screen.dart';
 import 'package:pomodoro_sczuw/theme/timer_colors.dart';
 import 'package:pomodoro_sczuw/utils/styles/app_text_styles.dart';
 import 'package:pomodoro_sczuw/widgets/joke_widget.dart';
 import 'package:pomodoro_sczuw/widgets/timer_widget.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pomodoro_sczuw/screens/settings_screen.dart';
-import 'package:flutter/material.dart' as material;
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -16,6 +17,8 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final timer = ref.watch(sessionProvider);
     final timerColors = Theme.of(context).extension<TimerColors>()!;
+    final versionLabel = ref.watch(appVersionLabelProvider).valueOrNull;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(timer.state.label(), style: AppTextStyles.title),
@@ -30,23 +33,32 @@ class HomeScreen extends ConsumerWidget {
         ],
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            margin: const EdgeInsets.all(10),
+          Expanded(
             child: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TimerWidget(),
-                  const SizedBox(height: 30),
-                  JokeWidget(backgroundColor: timer.state.colorLevel(timerColors), textColor: Colors.white),
-                ],
+              child: Container(
+                margin: const EdgeInsets.all(10),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TimerWidget(),
+                    const SizedBox(height: 30),
+                    JokeWidget(backgroundColor: timer.state.colorLevel(timerColors), textColor: Colors.white),
+                  ],
+                ),
               ),
             ),
           ),
+          if (versionLabel != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Text(
+                versionLabel,
+                style: AppTextStyles.caption.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.45),
+                ),
+              ),
+            ),
         ],
       ),
     );

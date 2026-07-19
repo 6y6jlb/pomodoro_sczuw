@@ -30,15 +30,17 @@
 - **Future**: Android (channels), Windows (toast)
 
 ### Window Management
-- **Package**: `window_manager` (Linux desktop)
-- **Behavior**: 400x800px, hide on close (not destroy), show/focus on startup
-- **Future**: Windows (similar), Android (N/A)
+- **Package**: `window_manager` (Linux + Windows desktop)
+- **Behavior**: 400x800px, `setPreventClose(true)` then hide on close (not destroy), show/focus on startup
+- **Future**: Android (N/A)
 
 ### System Tray
-- **Package**: `tray_manager` (Linux desktop)
-- **Behavior**: Icon changes (red=activity, green=rest, gray=inactivity, yellow=paused), title shows MM:SS
+- **Package**: `tray_manager` (Linux + Windows desktop)
+- **Behavior**: Icon changes (red=activity, green=rest, gray=inactivity, yellow=paused); Linux `setTitle(MM:SS)`, Windows/macOS `setToolTip(MM:SS)`
+- **Icons**: PNG on Linux, ICO on Windows (`SessionState.trayIcon()`)
+- **Clicks**: left → show/focus window; right → context menu (Windows/macOS)
 - **Menu**: Show window, Exit, Collapse
-- **Future**: Windows (similar), Android (N/A)
+- **Future**: Android (N/A)
 
 ### Sound
 - **Package**: `audioplayers` (cross-platform)
@@ -55,7 +57,8 @@
 - **Future**: All platforms supported (network/IO based)
 
 ### Dependencies
-- **Linux-specific**: `window_manager`, `tray_manager`, `flutter_local_notifications`
+- **Desktop (Linux + Windows)**: `window_manager`, `tray_manager`
+- **Linux-specific**: `flutter_local_notifications` (Linux init/icons)
 - **Cross-platform**: `audioplayers`, `hive_flutter`
 
 ## Main Application Flow
