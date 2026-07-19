@@ -188,4 +188,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get error_retry => 'Error. Tap to retry';
+
+  @override
+  String get telegram_sectionTitle => 'Telegram';
+
+  @override
+  String get telegram_notificationsEnabled => 'Telegram notifications';
+
+  @override
+  String get telegram_botTokenLabel => 'Bot token';
+
+  @override
+  String get telegram_chatIdLabel => 'Chat ID';
+
+  @override
+  String get telegram_setupHint => 'Create a bot with @BotFather, send it /start, get your chat_id via @userinfobot, and paste the values above.';
+
+  @override
+  String get telegram_sendTest => 'Send test';
+
+  @override
+  String get telegram_sendingTest => 'Sending…';
+
+  @override
+  String get telegram_testSent => 'Telegram: test message sent';
+
+  @override
+  String telegram_testError(Object error) {
+    return 'Telegram: $error';
+  }
+
+  @override
+  String get telegram_notConfigured => 'Telegram is disabled or token/chat id is empty';
+
+  @override
+  String get telegram_started => 'Pomodoro: started';
+
+  @override
+  String get telegram_stopped => 'Pomodoro: stopped';
+
+  @override
+  String telegram_statusChanged(Object from, Object to) {
+    return 'Pomodoro: $from → $to';
+  }
+
+  @override
+  String telegram_paused(Object state) {
+    return 'Pomodoro: paused ($state)';
+  }
+
+  @override
+  String telegram_resumed(Object state) {
+    return 'Pomodoro: resumed ($state)';
+  }
+
+  @override
+  String get telegram_test => 'Pomodoro: test';
 }

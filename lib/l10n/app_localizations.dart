@@ -436,6 +436,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error. Tap to retry'**
   String get error_retry;
+
+  /// No description provided for @telegram_sectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Telegram'**
+  String get telegram_sectionTitle;
+
+  /// No description provided for @telegram_notificationsEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Telegram notifications'**
+  String get telegram_notificationsEnabled;
+
+  /// No description provided for @telegram_botTokenLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Bot token'**
+  String get telegram_botTokenLabel;
+
+  /// No description provided for @telegram_chatIdLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat ID'**
+  String get telegram_chatIdLabel;
+
+  /// No description provided for @telegram_setupHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a bot with @BotFather, send it /start, get your chat_id via @userinfobot, and paste the values above.'**
+  String get telegram_setupHint;
+
+  /// No description provided for @telegram_sendTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Send test'**
+  String get telegram_sendTest;
+
+  /// No description provided for @telegram_sendingTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending…'**
+  String get telegram_sendingTest;
+
+  /// No description provided for @telegram_testSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Telegram: test message sent'**
+  String get telegram_testSent;
+
+  /// No description provided for @telegram_testError.
+  ///
+  /// In en, this message translates to:
+  /// **'Telegram: {error}'**
+  String telegram_testError(Object error);
+
+  /// No description provided for @telegram_notConfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'Telegram is disabled or token/chat id is empty'**
+  String get telegram_notConfigured;
+
+  /// No description provided for @telegram_started.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro: started'**
+  String get telegram_started;
+
+  /// No description provided for @telegram_stopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro: stopped'**
+  String get telegram_stopped;
+
+  /// No description provided for @telegram_statusChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro: {from} → {to}'**
+  String telegram_statusChanged(Object from, Object to);
+
+  /// No description provided for @telegram_paused.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro: paused ({state})'**
+  String telegram_paused(Object state);
+
+  /// No description provided for @telegram_resumed.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro: resumed ({state})'**
+  String telegram_resumed(Object state);
+
+  /// No description provided for @telegram_test.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro: test'**
+  String get telegram_test;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

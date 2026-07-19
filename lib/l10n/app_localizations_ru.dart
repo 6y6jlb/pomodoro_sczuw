@@ -188,4 +188,60 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get error_retry => 'Ошибка. Нажмите для повтора';
+
+  @override
+  String get telegram_sectionTitle => 'Telegram';
+
+  @override
+  String get telegram_notificationsEnabled => 'Уведомления в Telegram';
+
+  @override
+  String get telegram_botTokenLabel => 'Токен бота';
+
+  @override
+  String get telegram_chatIdLabel => 'Chat ID';
+
+  @override
+  String get telegram_setupHint => 'Создайте бота у @BotFather, напишите ему /start, узнайте chat_id через @userinfobot и вставьте значения выше.';
+
+  @override
+  String get telegram_sendTest => 'Отправить тест';
+
+  @override
+  String get telegram_sendingTest => 'Отправка…';
+
+  @override
+  String get telegram_testSent => 'Telegram: тестовое сообщение отправлено';
+
+  @override
+  String telegram_testError(Object error) {
+    return 'Telegram: $error';
+  }
+
+  @override
+  String get telegram_notConfigured => 'Telegram выключен или не заполнены token/chat id';
+
+  @override
+  String get telegram_started => 'Pomodoro: запуск';
+
+  @override
+  String get telegram_stopped => 'Pomodoro: остановка';
+
+  @override
+  String telegram_statusChanged(Object from, Object to) {
+    return 'Pomodoro: $from → $to';
+  }
+
+  @override
+  String telegram_paused(Object state) {
+    return 'Pomodoro: пауза ($state)';
+  }
+
+  @override
+  String telegram_resumed(Object state) {
+    return 'Pomodoro: продолжение ($state)';
+  }
+
+  @override
+  String get telegram_test => 'Pomodoro: тест';
 }

@@ -56,5 +56,21 @@
     "notification_inactivity_complete_title": "Сессия завершена",
     "notification_inactivity_complete_body": "Готовы начать новую сессию?",
     "loading": "Загружается...",
-    "error_retry": "Ошибка. Нажмите для повтора"
+    "error_retry": "Ошибка. Нажмите для повтора",
+    "telegram_sectionTitle": "Telegram",
+    "telegram_notificationsEnabled": "Уведомления в Telegram",
+    "telegram_botTokenLabel": "Токен бота",
+    "telegram_chatIdLabel": "Chat ID",
+    "telegram_setupHint": "Создайте бота у @BotFather, напишите ему /start, узнайте chat_id через @userinfobot и вставьте значения выше.",
+    "telegram_sendTest": "Отправить тест",
+    "telegram_sendingTest": "Отправка…",
+    "telegram_testSent": "Telegram: тестовое сообщение отправлено",
+    "telegram_testError": "Telegram: {error}",
+    "telegram_notConfigured": "Telegram выключен или не заполнены token/chat id",
+    "telegram_started": "Pomodoro: запуск",
+    "telegram_stopped": "Pomodoro: остановка",
+    "telegram_statusChanged": "Pomodoro: {from} → {to}",
+    "telegram_paused": "Pomodoro: пауза ({state})",
+    "telegram_resumed": "Pomodoro: продолжение ({state})",
+    "telegram_test": "Pomodoro: тест"
 }

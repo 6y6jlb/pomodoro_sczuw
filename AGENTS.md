@@ -53,9 +53,10 @@
 - **Events**: `SessionStatusChanged`, `SessionPaused`/`SessionResumed`, `SessionCompleted`, `UserActionPressed`, `PageNavigated`
 - **Publishers**: session callbacks in `pomodoroSessionManagerProvider`; button actions in `SessionNotifier`; navigation via `IntegrationNavigatorObserver`
 - **Implementation (HTTP)**: `Esp32LedIntegration` maps status/pause/resume → `TimerPhase` then LED pattern — yellow `/yellow` for 0.5s then activity→steady `/green`, rest→alternate `/green`/`/yellow` every 0.5s, paused→`/yellow` immediately, inactivity→`/off`. Phase dedupe lives inside the adapter
-- **Config**: `IntegrationConstant.esp32BaseUrl` (default `http://192.168.0.102`)
-- **Extensibility**: Implement `Integration`, register in `integrationBusProvider` (Telegram, webhooks, Home Assistant, email, ...)
-- **Future**: All platforms supported (network/IO based); optional Hive toggles/config UI
+- **Implementation (Telegram)**: `TelegramIntegration` sends personal `sendMessage` via Bot API — start/stop (`UserActionPressed`), status (`SessionStatusChanged`), pause/resume. Per-user bot token + chat_id from Hive (`PomodoroSettings`); no shared token in code. Credentials read via `credentialsProvider` on each send
+- **Config**: `IntegrationConstant.esp32BaseUrl` (default `http://192.168.0.102`); Telegram: `telegramEnabled` / `telegramBotToken` / `telegramChatId` in Hive + Settings UI
+- **Extensibility**: Implement `Integration`, register in `integrationBusProvider` (webhooks, Home Assistant, email, ...)
+- **Future**: All platforms supported (network/IO based)
 
 ### Dependencies
 - **Desktop (Linux + Windows)**: `window_manager`, `tray_manager`
@@ -102,7 +103,8 @@ User Action → `SessionNotifier` → `TimerNotifier` → `PomodoroSessionManage
 - **Session**: `onStateChanged` / pause / resume / complete → `IntegrationBus.publish(...)`
 - **UI actions**: `SessionNotifier` → `UserActionPressed`
 - **Navigation**: `IntegrationNavigatorObserver` → `PageNavigated`
-- Registered adapters (e.g. `Esp32LedIntegration`) decide which events to handle
+- Registered adapters (`Esp32LedIntegration`, `TelegramIntegration`) decide which events to handle
+- **Telegram settings**: Settings screen → Hive → `credentialsProvider` in `integrationBusProvider`
 
 ## Key Patterns
 - Event-driven: Timer events via streams

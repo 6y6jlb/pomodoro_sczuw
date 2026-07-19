@@ -12,6 +12,10 @@ class L10n {
     _localizations = AppLocalizations.of(context)!;
   }
 
+  void initializeWith(AppLocalizations localizations) {
+    _localizations = localizations;
+  }
+
   AppLocalizations get t => _localizations;
 
   // Проверяем, инициализирован ли L10n для использования в фоне

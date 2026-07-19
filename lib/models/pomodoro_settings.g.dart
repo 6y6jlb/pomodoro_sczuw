@@ -19,17 +19,26 @@ class PomodoroSettingsAdapter extends TypeAdapter<PomodoroSettings> {
     return PomodoroSettings(
       sessionDuration: fields[0] as int,
       breakDuration: fields[1] as int,
+      telegramEnabled: fields[2] == null ? false : fields[2] as bool,
+      telegramBotToken: fields[3] == null ? '' : fields[3] as String,
+      telegramChatId: fields[4] == null ? '' : fields[4] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, PomodoroSettings obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.sessionDuration)
       ..writeByte(1)
-      ..write(obj.breakDuration);
+      ..write(obj.breakDuration)
+      ..writeByte(2)
+      ..write(obj.telegramEnabled)
+      ..writeByte(3)
+      ..write(obj.telegramBotToken)
+      ..writeByte(4)
+      ..write(obj.telegramChatId);
   }
 
   @override

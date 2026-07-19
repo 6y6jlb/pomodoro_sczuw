@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_sczuw/models/pomodoro_settings.dart';
 import 'package:hive/hive.dart';
 import 'package:pomodoro_sczuw/services/hive_service.dart';
-import 'package:pomodoro_sczuw/utils/consts/settings_constant.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
 
 /// Notifier для управления настройками Pomodoro с автоматическим сохранением в Hive
@@ -44,9 +43,37 @@ class PomodoroSettingsNotifier extends AsyncNotifier<PomodoroSettings> {
     await _saveSettings(newSettings);
   }
 
-  Future<void> resetToDefaults() async {
-    final initialSettings = PomodoroSettings.initial();
-    await _saveSettings(initialSettings);
+  Future<void> updateTelegramEnabled(bool enabled) async {
+    final currentState = state.value;
+    if (currentState == null) return;
+
+    await _saveSettings(currentState.copyWith(telegramEnabled: enabled));
+  }
+
+  Future<void> updateTelegramBotToken(String token) async {
+    final currentState = state.value;
+    if (currentState == null) return;
+
+    await _saveSettings(currentState.copyWith(telegramBotToken: token));
+  }
+
+  Future<void> updateTelegramChatId(String chatId) async {
+    final currentState = state.value;
+    if (currentState == null) return;
+
+    await _saveSettings(currentState.copyWith(telegramChatId: chatId));
+  }
+
+  Future<void> resetSessionDurationsToDefaults() async {
+    final currentState = state.value;
+    if (currentState == null) return;
+
+    await _saveSettings(
+      currentState.copyWith(
+        sessionDuration: SessionState.activity.defaultDuration,
+        breakDuration: SessionState.rest.defaultDuration,
+      ),
+    );
   }
 
   /// Внутренний метод для сохранения настроек
