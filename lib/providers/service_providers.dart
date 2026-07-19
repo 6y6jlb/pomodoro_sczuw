@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_sczuw/services/abstract/timer_service.dart';
 import 'package:pomodoro_sczuw/services/desktop_timer_service.dart';
+import 'package:pomodoro_sczuw/services/integrations/esp32_led_integration.dart';
+import 'package:pomodoro_sczuw/services/integrations/integration_bus.dart';
 import 'package:pomodoro_sczuw/services/sound_service.dart';
 import 'package:pomodoro_sczuw/services/system_notification_service.dart';
-import 'package:pomodoro_sczuw/services/side_effects/side_effect_manager.dart';
-import 'package:pomodoro_sczuw/services/side_effects/esp32_led_side_effect.dart';
-import 'package:pomodoro_sczuw/utils/consts/side_effect_constant.dart';
+import 'package:pomodoro_sczuw/utils/consts/integration_constant.dart';
 
 final timerServiceProvider = Provider<TimerService>((ref) {
   return DesktopTimerService();
@@ -25,12 +25,15 @@ final systemNotificationServiceProvider = Provider<SystemNotificationService>((r
   return SystemNotificationService();
 });
 
-final sideEffectManagerProvider = Provider<SideEffectManager>((ref) {
-  final manager = SideEffectManager([Esp32LedSideEffect(baseUrl: SideEffectConstant.esp32BaseUrl)]);
+final integrationBusProvider = Provider<IntegrationBus>((ref) {
+  final bus = IntegrationBus([
+    Esp32LedIntegration(baseUrl: IntegrationConstant.esp32BaseUrl),
+    // TelegramIntegration(...), WebhookIntegration(...), HomeAssistantIntegration(...)
+  ]);
 
   ref.onDispose(() {
-    manager.dispose();
+    bus.dispose();
   });
 
-  return manager;
+  return bus;
 });

@@ -6,6 +6,7 @@ import 'package:pomodoro_sczuw/providers/app_version_provider.dart';
 import 'package:pomodoro_sczuw/providers/session_provider.dart';
 import 'package:pomodoro_sczuw/screens/settings_screen.dart';
 import 'package:pomodoro_sczuw/theme/timer_colors.dart';
+import 'package:pomodoro_sczuw/utils/consts/integration_constant.dart';
 import 'package:pomodoro_sczuw/utils/styles/app_text_styles.dart';
 import 'package:pomodoro_sczuw/widgets/joke_widget.dart';
 import 'package:pomodoro_sczuw/widgets/timer_widget.dart';
@@ -26,7 +27,13 @@ class HomeScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsScreen()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  settings: const RouteSettings(name: IntegrationConstant.settingsRouteName),
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
             },
             icon: material.Icon(material.Icons.settings),
           ),

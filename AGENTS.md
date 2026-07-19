@@ -15,7 +15,7 @@
 ## Architecture
 - **State Management**: Riverpod (`flutter_riverpod`)
 - **Pattern**: Provider/Service separation
-- **Directories**: `providers/` (state), `services/` (logic), `models/` (data), `widgets/` (UI), `screens/` (screens), `enums/`, `events/`
+- **Directories**: `providers/` (state), `services/` (logic, including `integrations/`), `models/` (data), `widgets/` (UI), `screens/` (screens), `enums/`, `events/`
 
 ## Platform-Specific Features
 
@@ -47,14 +47,15 @@
 - **Files**: `request.mp3` (complete), `toggle.mp3` (actions)
 - **Future**: All platforms supported, may need audio focus on Android
 
-### State Side Effects
-- **Abstract**: `StateSideEffect` interface (`onPhaseChanged(TimerPhase)`, `dispose()`)
-- **Dispatcher**: `SideEffectManager` fans out phase changes to all registered side effects; dedupes repeated phases
-- **Phase**: `TimerPhase` enum (`activity`, `rest`, `inactivity`, `paused`) derived from `SessionState` + paused via `TimerPhaseMapping.fromState`
-- **Implementation (HTTP)**: `Esp32LedSideEffect` (uses `dio`) on phase change: yellow `/yellow` for 0.5s then pattern — activity→steady `/green`, rest→alternate `/green`/`/yellow` every 0.5s, paused→`/yellow` immediately, inactivity→`/off`. Fire-and-forget with 2s timeouts; errors swallowed so the timer is never blocked
-- **Config**: `SideEffectConstant.esp32BaseUrl` (default `http://192.168.0.102`)
-- **Extensibility**: Add a new `StateSideEffect` implementation (MQTT, serial, smart bulb, ...) and register it in `sideEffectManagerProvider`
-- **Future**: All platforms supported (network/IO based)
+### Integrations
+- **Abstract**: `Integration` (`id`, `handle(IntegrationEvent)`, `dispose()`)
+- **Bus**: `IntegrationBus` fans out typed events fire-and-forget; errors isolated per integration
+- **Events**: `SessionStatusChanged`, `SessionPaused`/`SessionResumed`, `SessionCompleted`, `UserActionPressed`, `PageNavigated`
+- **Publishers**: session callbacks in `pomodoroSessionManagerProvider`; button actions in `SessionNotifier`; navigation via `IntegrationNavigatorObserver`
+- **Implementation (HTTP)**: `Esp32LedIntegration` maps status/pause/resume → `TimerPhase` then LED pattern — yellow `/yellow` for 0.5s then activity→steady `/green`, rest→alternate `/green`/`/yellow` every 0.5s, paused→`/yellow` immediately, inactivity→`/off`. Phase dedupe lives inside the adapter
+- **Config**: `IntegrationConstant.esp32BaseUrl` (default `http://192.168.0.102`)
+- **Extensibility**: Implement `Integration`, register in `integrationBusProvider` (Telegram, webhooks, Home Assistant, email, ...)
+- **Future**: All platforms supported (network/IO based); optional Hive toggles/config UI
 
 ### Dependencies
 - **Desktop (Linux + Windows)**: `window_manager`, `tray_manager`
@@ -70,6 +71,7 @@
 - `timerServiceProvider` → `DesktopTimerService`
 - `soundServiceProvider` → `SoundService`
 - `systemNotificationServiceProvider` → `SystemNotificationService`
+- `integrationBusProvider` → `IntegrationBus` (+ registered `Integration`s)
 - `pomodoroSettingsProvider` → Hive storage
 - `pomodoroSessionManagerProvider` → `PomodoroSessionManager`
 
@@ -96,9 +98,11 @@ User Action → `SessionNotifier` → `TimerNotifier` → `PomodoroSessionManage
 - **Notifications**: `onStateChanged` (state change), `onSessionCompleted` (timer complete)
 - **Sounds**: 'toggle' (user actions), 'request' (session complete)
 
-### Side Effects
-- **Hooks**: `onStateChanged` → `SideEffectManager.handleStateChanged`, `onSessionPaused`/`onSessionResumed` → `handlePaused`/`handleResumed`
-- Wired in `pomodoroSessionManagerProvider`; manager resolves `SessionState`(+paused) into a `TimerPhase` and dispatches to all `StateSideEffect`s (e.g. ESP32 LED via HTTP)
+### Integrations (runtime)
+- **Session**: `onStateChanged` / pause / resume / complete → `IntegrationBus.publish(...)`
+- **UI actions**: `SessionNotifier` → `UserActionPressed`
+- **Navigation**: `IntegrationNavigatorObserver` → `PageNavigated`
+- Registered adapters (e.g. `Esp32LedIntegration`) decide which events to handle
 
 ## Key Patterns
 - Event-driven: Timer events via streams
@@ -117,7 +121,7 @@ User Action → `SessionNotifier` → `TimerNotifier` → `PomodoroSessionManage
 ## Documenting Main Flow Changes
 **Rule**: When core features or main flow changes, update AGENTS.md
 
-**Main Features**: Timer functionality, session state management, initialization, state management architecture, service layer, major UI flow, persistence, notifications, sounds
+**Main Features**: Timer functionality, session state management, initialization, state management architecture, service layer, integrations bus, major UI flow, persistence, notifications, sounds
 
 **How**: Update "Main Application Flow" section with current flow, key components, state transitions
 

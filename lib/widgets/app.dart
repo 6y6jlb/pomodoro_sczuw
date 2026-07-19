@@ -5,11 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
 import 'package:pomodoro_sczuw/l10n/app_localizations.dart';
 import 'package:pomodoro_sczuw/models/pomodoro_session.dart';
+import 'package:pomodoro_sczuw/providers/service_providers.dart';
 import 'package:pomodoro_sczuw/providers/timer_provider.dart';
 import 'package:pomodoro_sczuw/screens/home_screen.dart';
+import 'package:pomodoro_sczuw/services/integrations/integration_navigator_observer.dart';
 import 'package:pomodoro_sczuw/services/l10n.dart';
 import 'package:pomodoro_sczuw/theme/alert_colors.dart';
 import 'package:pomodoro_sczuw/theme/timer_colors.dart';
+import 'package:pomodoro_sczuw/utils/consts/integration_constant.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -21,9 +24,12 @@ class App extends ConsumerStatefulWidget {
 }
 
 class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
+  late final IntegrationNavigatorObserver _integrationNavigatorObserver;
+
   @override
   void initState() {
     super.initState();
+    _integrationNavigatorObserver = IntegrationNavigatorObserver(ref.read(integrationBusProvider));
     windowManager.addListener(this);
     trayManager.addListener(this);
     _initTray();
@@ -186,7 +192,11 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
         ],
       ),
       themeMode: ThemeMode.system,
-      home: HomeScreen(),
+      initialRoute: IntegrationConstant.homeRouteName,
+      routes: {
+        IntegrationConstant.homeRouteName: (_) => const HomeScreen(),
+      },
+      navigatorObservers: [_integrationNavigatorObserver],
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       localeResolutionCallback: (locale, supportedLocales) {
