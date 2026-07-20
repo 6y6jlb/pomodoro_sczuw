@@ -29,7 +29,7 @@ final systemNotificationServiceProvider = Provider<SystemNotificationService>((r
 
 final integrationBusProvider = Provider<IntegrationBus>((ref) {
   final bus = IntegrationBus([
-    Esp32LedIntegration(baseUrl: IntegrationConstant.esp32BaseUrl),
+    // Esp32LedIntegration(baseUrl: IntegrationConstant.esp32BaseUrl),
     TelegramIntegration(
       credentialsProvider: () {
         final settings = ref.read(pomodoroSettingsProvider).value;

@@ -13,6 +13,8 @@ import 'package:pomodoro_sczuw/services/integrations/events/integration_event.da
 /// - Inactivity: off.
 /// - Rest: alternates green / yellow every 0.5s.
 /// - Paused: yellow immediately, no transition flash.
+/// 
+@Deprecated.extend('esp32 integration example')
 class Esp32LedIntegration implements Integration {
   static const Duration _transitionDuration = Duration(milliseconds: 500);
   static const Duration _restAlternationInterval = Duration(milliseconds: 500);
