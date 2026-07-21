@@ -1,6 +1,8 @@
 import 'package:hive/hive.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
 import 'package:pomodoro_sczuw/enums/sound_event.dart';
+import 'package:pomodoro_sczuw/utils/consts/app_locale_preference.dart';
+import 'package:pomodoro_sczuw/utils/consts/app_theme_palette.dart';
 import 'package:pomodoro_sczuw/utils/consts/app_theme_preference.dart';
 import 'package:pomodoro_sczuw/utils/consts/sound_preset.dart';
 
@@ -42,7 +44,13 @@ class PomodoroSettings extends HiveObject {
   final String soundStateInactivity;
 
   @HiveField(11, defaultValue: AppThemePreference.system)
-  final String themeMode;
+  final String? themeMode;
+
+  @HiveField(12, defaultValue: AppThemePalette.defaultPalette)
+  final String? themePalette;
+
+  @HiveField(13, defaultValue: AppLocalePreference.system)
+  final String? locale;
 
   PomodoroSettings({
     required this.sessionDuration,
@@ -57,12 +65,43 @@ class PomodoroSettings extends HiveObject {
     this.soundStateRest = SoundPreset.off,
     this.soundStateInactivity = SoundPreset.off,
     this.themeMode = AppThemePreference.system,
+    this.themePalette = AppThemePalette.defaultPalette,
+    this.locale = AppLocalePreference.system,
   });
 
   factory PomodoroSettings.initial() {
     return PomodoroSettings(
       sessionDuration: SessionState.activity.defaultDuration,
       breakDuration: SessionState.rest.defaultDuration,
+    );
+  }
+
+  String get resolvedThemeMode =>
+      AppThemePreference.normalize(themeMode ?? AppThemePreference.system);
+
+  String get resolvedThemePalette =>
+      AppThemePalette.normalize(themePalette ?? AppThemePalette.defaultPalette);
+
+  String get resolvedLocale =>
+      AppLocalePreference.normalize(locale ?? AppLocalePreference.system);
+
+  /// Rebuilds settings with normalized theme/locale fields (Hive migration / hot reload).
+  PomodoroSettings rehydrate() {
+    return PomodoroSettings(
+      sessionDuration: sessionDuration,
+      breakDuration: breakDuration,
+      telegramEnabled: telegramEnabled,
+      telegramBotToken: telegramBotToken,
+      telegramChatId: telegramChatId,
+      restOverlayEnabled: restOverlayEnabled,
+      soundUserAction: soundUserAction,
+      soundSessionComplete: soundSessionComplete,
+      soundStateActivity: soundStateActivity,
+      soundStateRest: soundStateRest,
+      soundStateInactivity: soundStateInactivity,
+      themeMode: resolvedThemeMode,
+      themePalette: resolvedThemePalette,
+      locale: resolvedLocale,
     );
   }
 
@@ -94,6 +133,8 @@ class PomodoroSettings extends HiveObject {
     String? soundStateRest,
     String? soundStateInactivity,
     String? themeMode,
+    String? themePalette,
+    String? locale,
   }) {
     return PomodoroSettings(
       sessionDuration: sessionDuration ?? this.sessionDuration,
@@ -107,7 +148,9 @@ class PomodoroSettings extends HiveObject {
       soundStateActivity: soundStateActivity ?? this.soundStateActivity,
       soundStateRest: soundStateRest ?? this.soundStateRest,
       soundStateInactivity: soundStateInactivity ?? this.soundStateInactivity,
-      themeMode: themeMode ?? this.themeMode,
+      themeMode: themeMode ?? resolvedThemeMode,
+      themePalette: themePalette ?? resolvedThemePalette,
+      locale: locale ?? resolvedLocale,
     );
   }
 }

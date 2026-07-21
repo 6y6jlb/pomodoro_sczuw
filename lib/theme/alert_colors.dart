@@ -6,7 +6,7 @@ class AlertColors extends ThemeExtension<AlertColors> {
   final Color success;
   final Color danger;
 
-  AlertColors({required this.info, required this.warning, required this.success, required this.danger});
+  const AlertColors({required this.info, required this.warning, required this.success, required this.danger});
 
   @override
   ThemeExtension<AlertColors> copyWith({Color? info, Color? warning, Color? success, Color? danger}) {

@@ -688,6 +688,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Dark'**
   String get theme_dark;
+
+  /// No description provided for @theme_paletteSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Palette'**
+  String get theme_paletteSection;
+
+  /// No description provided for @theme_paletteDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get theme_paletteDefault;
+
+  /// No description provided for @theme_paletteSage.
+  ///
+  /// In en, this message translates to:
+  /// **'Sage'**
+  String get theme_paletteSage;
+
+  /// No description provided for @theme_paletteMist.
+  ///
+  /// In en, this message translates to:
+  /// **'Mist'**
+  String get theme_paletteMist;
+
+  /// No description provided for @theme_paletteSand.
+  ///
+  /// In en, this message translates to:
+  /// **'Sand'**
+  String get theme_paletteSand;
+
+  /// No description provided for @settings_sectionSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Session'**
+  String get settings_sectionSession;
+
+  /// No description provided for @settings_sectionAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get settings_sectionAppearance;
+
+  /// No description provided for @settings_sectionRestOverlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest overlay'**
+  String get settings_sectionRestOverlay;
+
+  /// No description provided for @settings_sectionSounds.
+  ///
+  /// In en, this message translates to:
+  /// **'Sounds'**
+  String get settings_sectionSounds;
+
+  /// No description provided for @settings_sectionTelegram.
+  ///
+  /// In en, this message translates to:
+  /// **'Telegram'**
+  String get settings_sectionTelegram;
+
+  /// No description provided for @language_sectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language_sectionTitle;
+
+  /// No description provided for @language_system.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get language_system;
+
+  /// No description provided for @language_en.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get language_en;
+
+  /// No description provided for @language_ru.
+  ///
+  /// In en, this message translates to:
+  /// **'Russian'**
+  String get language_ru;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

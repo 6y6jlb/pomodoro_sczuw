@@ -4,6 +4,8 @@ import 'package:path/path.dart' as p;
 import 'package:pomodoro_sczuw/enums/session_state.dart';
 import 'package:pomodoro_sczuw/services/integrations/telegram_integration.dart';
 import 'package:pomodoro_sczuw/services/l10n.dart';
+import 'package:pomodoro_sczuw/utils/consts/app_locale_preference.dart';
+import 'package:pomodoro_sczuw/utils/consts/app_theme_palette.dart';
 import 'package:pomodoro_sczuw/utils/consts/app_theme_preference.dart';
 import 'package:pomodoro_sczuw/utils/consts/sound_preset.dart';
 import 'package:pomodoro_sczuw/utils/styles/app_text_styles.dart';
@@ -133,259 +135,337 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             settings.telegramBotToken,
             settings.telegramChatId,
           );
+          final l10n = L10n().t;
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  '${L10n().t.sessionDurationLabel} ${settings.sessionDuration ~/ 60} ${L10n().t.unitShort_minute}',
-                  style: const TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                Slider(
-                  value: settings.sessionDuration.toDouble(),
-                  min: 0.toDouble(),
-                  max: SessionState.activity.maxDuration.toDouble(),
-                  divisions: 12,
-                  onChanged: (value) {
-                    ref
-                        .read(pomodoroSettingsProvider.notifier)
-                        .updateSessionDuration(value.toInt());
-                  },
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  '${L10n().t.restDurationLabel} ${settings.breakDuration ~/ 60} ${L10n().t.unitShort_minute}',
-                  style: const TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                Slider(
-                  value: settings.breakDuration.toDouble(),
-                  min: 0.toDouble(),
-                  max: SessionState.rest.maxDuration.toDouble(),
-                  divisions: 12,
-                  onChanged: (value) {
-                    ref
-                        .read(pomodoroSettingsProvider.notifier)
-                        .updateBreakDuration(value.toInt());
-                  },
-                ),
-                const SizedBox(height: 16),
-                Center(
-                  child: TextButton(
-                    onPressed: () {
-                      ref
-                          .read(pomodoroSettingsProvider.notifier)
-                          .resetSessionDurationsToDefaults();
-                    },
-                    child: Text(L10n().t.action_resetToDefaults),
+          return ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            children: [
+              _SettingsExpansionSection(
+                title: l10n.settings_sectionSession,
+                children: [
+                  Text(
+                    '${l10n.sessionDurationLabel} ${settings.sessionDuration ~/ 60} ${l10n.unitShort_minute}',
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  L10n().t.theme_sectionTitle,
-                  style: const TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  alignment: WrapAlignment.center,
-                  children: [
-                    _SettingsOptionChip(
-                      label: L10n().t.theme_system,
-                      selected: AppThemePreference.normalize(settings.themeMode) ==
-                          AppThemePreference.system,
-                      onTap: () {
-                        ref
-                            .read(pomodoroSettingsProvider.notifier)
-                            .updateThemeMode(AppThemePreference.system);
+                  Slider(
+                    value: settings.sessionDuration.toDouble(),
+                    min: 0.toDouble(),
+                    max: SessionState.activity.maxDuration.toDouble(),
+                    divisions: 12,
+                    onChanged: (value) {
+                      ref.read(pomodoroSettingsProvider.notifier).updateSessionDuration(value.toInt());
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '${l10n.restDurationLabel} ${settings.breakDuration ~/ 60} ${l10n.unitShort_minute}',
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.center,
+                  ),
+                  Slider(
+                    value: settings.breakDuration.toDouble(),
+                    min: 0.toDouble(),
+                    max: SessionState.rest.maxDuration.toDouble(),
+                    divisions: 12,
+                    onChanged: (value) {
+                      ref.read(pomodoroSettingsProvider.notifier).updateBreakDuration(value.toInt());
+                    },
+                  ),
+                  Center(
+                    child: TextButton(
+                      onPressed: () {
+                        ref.read(pomodoroSettingsProvider.notifier).resetSessionDurationsToDefaults();
                       },
+                      child: Text(l10n.action_resetToDefaults),
                     ),
-                    _SettingsOptionChip(
-                      label: L10n().t.theme_light,
-                      selected: settings.themeMode == AppThemePreference.light,
-                      onTap: () {
-                        ref
-                            .read(pomodoroSettingsProvider.notifier)
-                            .updateThemeMode(AppThemePreference.light);
-                      },
-                    ),
-                    _SettingsOptionChip(
-                      label: L10n().t.theme_dark,
-                      selected: settings.themeMode == AppThemePreference.dark,
-                      onTap: () {
-                        ref
-                            .read(pomodoroSettingsProvider.notifier)
-                            .updateThemeMode(AppThemePreference.dark);
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  L10n().t.restOverlay_sectionTitle,
-                  style: const TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(L10n().t.restOverlay_enabled),
-                  value: settings.restOverlayEnabled,
-                  onChanged: (value) {
-                    ref
-                        .read(pomodoroSettingsProvider.notifier)
-                        .updateRestOverlayEnabled(value);
-                  },
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  L10n().t.sounds_sectionTitle,
-                  style: const TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                _SoundEventSetting(
-                  label: L10n().t.sounds_userAction,
-                  value: settings.soundUserAction,
-                  defaultValue: SoundPreset.toggle,
-                  onChanged: (value) {
-                    ref
-                        .read(pomodoroSettingsProvider.notifier)
-                        .updateSoundUserAction(value);
-                  },
-                ),
-                _SoundEventSetting(
-                  label: L10n().t.sounds_sessionComplete,
-                  value: settings.soundSessionComplete,
-                  defaultValue: SoundPreset.request,
-                  onChanged: (value) {
-                    ref
-                        .read(pomodoroSettingsProvider.notifier)
-                        .updateSoundSessionComplete(value);
-                  },
-                ),
-                _SoundEventSetting(
-                  label: L10n().t.sounds_stateActivity,
-                  value: settings.soundStateActivity,
-                  defaultValue: SoundPreset.off,
-                  onChanged: (value) {
-                    ref
-                        .read(pomodoroSettingsProvider.notifier)
-                        .updateSoundStateActivity(value);
-                  },
-                ),
-                _SoundEventSetting(
-                  label: L10n().t.sounds_stateRest,
-                  value: settings.soundStateRest,
-                  defaultValue: SoundPreset.off,
-                  onChanged: (value) {
-                    ref
-                        .read(pomodoroSettingsProvider.notifier)
-                        .updateSoundStateRest(value);
-                  },
-                ),
-                _SoundEventSetting(
-                  label: L10n().t.sounds_stateInactivity,
-                  value: settings.soundStateInactivity,
-                  defaultValue: SoundPreset.off,
-                  onChanged: (value) {
-                    ref
-                        .read(pomodoroSettingsProvider.notifier)
-                        .updateSoundStateInactivity(value);
-                  },
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  L10n().t.telegram_sectionTitle,
-                  style: const TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(L10n().t.telegram_notificationsEnabled),
-                  value: settings.telegramEnabled,
-                  onChanged: (telegramFieldsFilled || settings.telegramEnabled)
-                      ? (value) {
-                          if (value && !telegramFieldsFilled) return;
+                  ),
+                ],
+              ),
+              _SettingsExpansionSection(
+                title: l10n.settings_sectionAppearance,
+                children: [
+                  Text(
+                    l10n.theme_sectionTitle,
+                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    alignment: WrapAlignment.center,
+                    children: [
+                      _SettingsOptionChip(
+                        label: l10n.theme_system,
+                        selected: settings.resolvedThemeMode == AppThemePreference.system,
+                        onTap: () {
+                          ref.read(pomodoroSettingsProvider.notifier).updateThemeMode(AppThemePreference.system);
+                        },
+                      ),
+                      _SettingsOptionChip(
+                        label: l10n.theme_light,
+                        selected: settings.resolvedThemeMode == AppThemePreference.light,
+                        onTap: () {
+                          ref.read(pomodoroSettingsProvider.notifier).updateThemeMode(AppThemePreference.light);
+                        },
+                      ),
+                      _SettingsOptionChip(
+                        label: l10n.theme_dark,
+                        selected: settings.resolvedThemeMode == AppThemePreference.dark,
+                        onTap: () {
+                          ref.read(pomodoroSettingsProvider.notifier).updateThemeMode(AppThemePreference.dark);
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    l10n.theme_paletteSection,
+                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    alignment: WrapAlignment.center,
+                    children: [
+                      _SettingsOptionChip(
+                        label: l10n.theme_paletteDefault,
+                        selected: settings.resolvedThemePalette == AppThemePalette.defaultPalette,
+                        onTap: () {
                           ref
                               .read(pomodoroSettingsProvider.notifier)
-                              .updateTelegramEnabled(value);
-                        }
-                      : null,
-                ),
-                TextField(
-                  controller: _telegramBotTokenController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: L10n().t.telegram_botTokenLabel,
-                    border: _inputBorder,
-                    enabledBorder: _inputBorder,
-                    focusedBorder: _inputBorder,
+                              .updateThemePalette(AppThemePalette.defaultPalette);
+                        },
+                      ),
+                      _SettingsOptionChip(
+                        label: l10n.theme_paletteSage,
+                        selected: settings.resolvedThemePalette == AppThemePalette.sage,
+                        onTap: () {
+                          ref.read(pomodoroSettingsProvider.notifier).updateThemePalette(AppThemePalette.sage);
+                        },
+                      ),
+                      _SettingsOptionChip(
+                        label: l10n.theme_paletteMist,
+                        selected: settings.resolvedThemePalette == AppThemePalette.mist,
+                        onTap: () {
+                          ref.read(pomodoroSettingsProvider.notifier).updateThemePalette(AppThemePalette.mist);
+                        },
+                      ),
+                      _SettingsOptionChip(
+                        label: l10n.theme_paletteSand,
+                        selected: settings.resolvedThemePalette == AppThemePalette.sand,
+                        onTap: () {
+                          ref.read(pomodoroSettingsProvider.notifier).updateThemePalette(AppThemePalette.sand);
+                        },
+                      ),
+                    ],
                   ),
-                  onChanged: (value) {
-                    _updateTelegramField(
-                      save: ref
-                          .read(pomodoroSettingsProvider.notifier)
-                          .updateTelegramBotToken,
-                      value: value,
-                    );
-                  },
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _telegramChatIdController,
-                  decoration: InputDecoration(
-                    labelText: L10n().t.telegram_chatIdLabel,
-                    border: _inputBorder,
-                    enabledBorder: _inputBorder,
-                    focusedBorder: _inputBorder,
+                  const SizedBox(height: 16),
+                  Text(
+                    l10n.language_sectionTitle,
+                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.center,
                   ),
-                  onChanged: (value) {
-                    _updateTelegramField(
-                      save: ref
-                          .read(pomodoroSettingsProvider.notifier)
-                          .updateTelegramChatId,
-                      value: value,
-                    );
-                  },
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  L10n().t.telegram_setupHint,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    alignment: WrapAlignment.center,
+                    children: [
+                      _SettingsOptionChip(
+                        label: l10n.language_system,
+                        selected: settings.resolvedLocale == AppLocalePreference.system,
+                        onTap: () {
+                          ref.read(pomodoroSettingsProvider.notifier).updateLocale(AppLocalePreference.system);
+                        },
+                      ),
+                      _SettingsOptionChip(
+                        label: l10n.language_en,
+                        selected: settings.resolvedLocale == AppLocalePreference.en,
+                        onTap: () {
+                          ref.read(pomodoroSettingsProvider.notifier).updateLocale(AppLocalePreference.en);
+                        },
+                      ),
+                      _SettingsOptionChip(
+                        label: l10n.language_ru,
+                        selected: settings.resolvedLocale == AppLocalePreference.ru,
+                        onTap: () {
+                          ref.read(pomodoroSettingsProvider.notifier).updateLocale(AppLocalePreference.ru);
+                        },
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(48),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: _inputBorderRadius,
+                ],
+              ),
+              _SettingsExpansionSection(
+                title: l10n.settings_sectionRestOverlay,
+                children: [
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(l10n.restOverlay_enabled),
+                    value: settings.restOverlayEnabled,
+                    onChanged: (value) {
+                      ref.read(pomodoroSettingsProvider.notifier).updateRestOverlayEnabled(value);
+                    },
+                  ),
+                ],
+              ),
+              _SettingsExpansionSection(
+                title: l10n.settings_sectionSounds,
+                children: [
+                  _SoundEventSetting(
+                    label: l10n.sounds_userAction,
+                    value: settings.soundUserAction,
+                    defaultValue: SoundPreset.toggle,
+                    onChanged: (value) {
+                      ref.read(pomodoroSettingsProvider.notifier).updateSoundUserAction(value);
+                    },
+                  ),
+                  _SoundEventSetting(
+                    label: l10n.sounds_sessionComplete,
+                    value: settings.soundSessionComplete,
+                    defaultValue: SoundPreset.request,
+                    onChanged: (value) {
+                      ref.read(pomodoroSettingsProvider.notifier).updateSoundSessionComplete(value);
+                    },
+                  ),
+                  _SoundEventSetting(
+                    label: l10n.sounds_stateActivity,
+                    value: settings.soundStateActivity,
+                    defaultValue: SoundPreset.off,
+                    onChanged: (value) {
+                      ref.read(pomodoroSettingsProvider.notifier).updateSoundStateActivity(value);
+                    },
+                  ),
+                  _SoundEventSetting(
+                    label: l10n.sounds_stateRest,
+                    value: settings.soundStateRest,
+                    defaultValue: SoundPreset.off,
+                    onChanged: (value) {
+                      ref.read(pomodoroSettingsProvider.notifier).updateSoundStateRest(value);
+                    },
+                  ),
+                  _SoundEventSetting(
+                    label: l10n.sounds_stateInactivity,
+                    value: settings.soundStateInactivity,
+                    defaultValue: SoundPreset.off,
+                    onChanged: (value) {
+                      ref.read(pomodoroSettingsProvider.notifier).updateSoundStateInactivity(value);
+                    },
+                  ),
+                ],
+              ),
+              _SettingsExpansionSection(
+                title: l10n.settings_sectionTelegram,
+                children: [
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(l10n.telegram_notificationsEnabled),
+                    value: settings.telegramEnabled,
+                    onChanged: (telegramFieldsFilled || settings.telegramEnabled)
+                        ? (value) {
+                            if (value && !telegramFieldsFilled) return;
+                            ref.read(pomodoroSettingsProvider.notifier).updateTelegramEnabled(value);
+                          }
+                        : null,
+                  ),
+                  TextField(
+                    controller: _telegramBotTokenController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: l10n.telegram_botTokenLabel,
+                      border: _inputBorder,
+                      enabledBorder: _inputBorder,
+                      focusedBorder: _inputBorder,
+                    ),
+                    onChanged: (value) {
+                      _updateTelegramField(
+                        save: ref.read(pomodoroSettingsProvider.notifier).updateTelegramBotToken,
+                        value: value,
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _telegramChatIdController,
+                    decoration: InputDecoration(
+                      labelText: l10n.telegram_chatIdLabel,
+                      border: _inputBorder,
+                      enabledBorder: _inputBorder,
+                      focusedBorder: _inputBorder,
+                    ),
+                    onChanged: (value) {
+                      _updateTelegramField(
+                        save: ref.read(pomodoroSettingsProvider.notifier).updateTelegramChatId,
+                        value: value,
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    l10n.telegram_setupHint,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
-                  onPressed: (!_isSendingTest && telegramFieldsFilled)
-                      ? _sendTelegramTest
-                      : null,
-                  child: Text(
-                    _isSendingTest
-                        ? L10n().t.telegram_sendingTest
-                        : L10n().t.telegram_sendTest,
+                  const SizedBox(height: 12),
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(48),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: _inputBorderRadius,
+                      ),
+                    ),
+                    onPressed: (!_isSendingTest && telegramFieldsFilled) ? _sendTelegramTest : null,
+                    child: Text(
+                      _isSendingTest ? l10n.telegram_sendingTest : l10n.telegram_sendTest,
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+            ],
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(child: Text('Error: $error')),
+      ),
+    );
+  }
+}
+
+class _SettingsExpansionSection extends StatelessWidget {
+  const _SettingsExpansionSection({
+    required this.title,
+    required this.children,
+  });
+
+  final String title;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      elevation: 0,
+      color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: colorScheme.outlineVariant.withValues(alpha: 0.5)),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: ExpansionTile(
+        title: Text(
+          title,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        children: children,
       ),
     );
   }

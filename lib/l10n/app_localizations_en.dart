@@ -322,4 +322,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get theme_dark => 'Dark';
+
+  @override
+  String get theme_paletteSection => 'Palette';
+
+  @override
+  String get theme_paletteDefault => 'Default';
+
+  @override
+  String get theme_paletteSage => 'Sage';
+
+  @override
+  String get theme_paletteMist => 'Mist';
+
+  @override
+  String get theme_paletteSand => 'Sand';
+
+  @override
+  String get settings_sectionSession => 'Session';
+
+  @override
+  String get settings_sectionAppearance => 'Appearance';
+
+  @override
+  String get settings_sectionRestOverlay => 'Rest overlay';
+
+  @override
+  String get settings_sectionSounds => 'Sounds';
+
+  @override
+  String get settings_sectionTelegram => 'Telegram';
+
+  @override
+  String get language_sectionTitle => 'Language';
+
+  @override
+  String get language_system => 'System';
+
+  @override
+  String get language_en => 'English';
+
+  @override
+  String get language_ru => 'Russian';
 }

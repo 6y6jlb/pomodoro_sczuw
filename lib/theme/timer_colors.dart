@@ -8,7 +8,7 @@ class TimerColors extends ThemeExtension<TimerColors> {
   final Color postpone;
   final Color resume;
 
-  TimerColors({required this.activity, required this.inactivity, required this.rest, required this.pause, required this.postpone, required this.resume});
+  const TimerColors({required this.activity, required this.inactivity, required this.rest, required this.pause, required this.postpone, required this.resume});
 
   @override
   ThemeExtension<TimerColors> copyWith({Color? activity, Color? inactivity, Color? rest, Color? pause, Color? postpone, Color? resume}) {

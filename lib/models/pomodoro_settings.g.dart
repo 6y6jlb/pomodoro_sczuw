@@ -29,13 +29,15 @@ class PomodoroSettingsAdapter extends TypeAdapter<PomodoroSettings> {
       soundStateRest: fields[9] == null ? '' : fields[9] as String,
       soundStateInactivity: fields[10] == null ? '' : fields[10] as String,
       themeMode: fields[11] == null ? 'system' : fields[11] as String,
+      themePalette: fields[12] == null ? 'default' : fields[12] as String,
+      locale: fields[13] == null ? 'system' : fields[13] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, PomodoroSettings obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.sessionDuration)
       ..writeByte(1)
@@ -59,7 +61,11 @@ class PomodoroSettingsAdapter extends TypeAdapter<PomodoroSettings> {
       ..writeByte(10)
       ..write(obj.soundStateInactivity)
       ..writeByte(11)
-      ..write(obj.themeMode);
+      ..write(obj.resolvedThemeMode)
+      ..writeByte(12)
+      ..write(obj.resolvedThemePalette)
+      ..writeByte(13)
+      ..write(obj.resolvedLocale);
   }
 
   @override

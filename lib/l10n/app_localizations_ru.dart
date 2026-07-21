@@ -322,4 +322,46 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get theme_dark => 'Тёмная';
+
+  @override
+  String get theme_paletteSection => 'Палитра';
+
+  @override
+  String get theme_paletteDefault => 'Обычная';
+
+  @override
+  String get theme_paletteSage => 'Шалфей';
+
+  @override
+  String get theme_paletteMist => 'Туман';
+
+  @override
+  String get theme_paletteSand => 'Песок';
+
+  @override
+  String get settings_sectionSession => 'Сессия';
+
+  @override
+  String get settings_sectionAppearance => 'Внешний вид';
+
+  @override
+  String get settings_sectionRestOverlay => 'Оверлей отдыха';
+
+  @override
+  String get settings_sectionSounds => 'Звуки';
+
+  @override
+  String get settings_sectionTelegram => 'Telegram';
+
+  @override
+  String get language_sectionTitle => 'Язык';
+
+  @override
+  String get language_system => 'Системный';
+
+  @override
+  String get language_en => 'English';
+
+  @override
+  String get language_ru => 'Русский';
 }

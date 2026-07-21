@@ -9,14 +9,15 @@ import 'package:pomodoro_sczuw/providers/pomodoro_settings_provider.dart';
 import 'package:pomodoro_sczuw/providers/service_providers.dart';
 import 'package:pomodoro_sczuw/providers/session_provider.dart';
 import 'package:pomodoro_sczuw/providers/timer_provider.dart';
+import 'package:pomodoro_sczuw/utils/consts/app_locale_preference.dart';
+import 'package:pomodoro_sczuw/utils/consts/app_theme_palette.dart';
 import 'package:pomodoro_sczuw/utils/consts/app_theme_preference.dart';
 import 'package:pomodoro_sczuw/screens/home_screen.dart';
 import 'package:pomodoro_sczuw/screens/rest_overlay_screen.dart';
 import 'package:pomodoro_sczuw/services/integrations/integration_navigator_observer.dart';
 import 'package:pomodoro_sczuw/services/l10n.dart';
 import 'package:pomodoro_sczuw/services/rest_overlay_service.dart';
-import 'package:pomodoro_sczuw/theme/alert_colors.dart';
-import 'package:pomodoro_sczuw/theme/timer_colors.dart';
+import 'package:pomodoro_sczuw/theme/app_themes.dart';
 import 'package:pomodoro_sczuw/utils/consts/integration_constant.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
@@ -180,6 +181,18 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
     }
   }
 
+  Locale? _resolveLocale(String preference) {
+    switch (AppLocalePreference.normalize(preference)) {
+      case AppLocalePreference.en:
+        return const Locale('en');
+      case AppLocalePreference.ru:
+        return const Locale('ru');
+      case AppLocalePreference.system:
+      default:
+        return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.listen<AsyncValue<PomodoroSession>>(timerProvider, (previous, next) {
@@ -188,64 +201,29 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
       });
     });
 
-    final themePreference = ref.watch(pomodoroSettingsProvider).when(
-          data: (settings) => settings.themeMode,
-          loading: () => AppThemePreference.system,
-          error: (_, __) => AppThemePreference.system,
-        );
+    final settings = ref.watch(pomodoroSettingsProvider);
+    final themePreference = settings.when(
+      data: (s) => s.resolvedThemeMode,
+      loading: () => AppThemePreference.system,
+      error: (_, __) => AppThemePreference.system,
+    );
+    final themePalette = settings.when(
+      data: (s) => s.resolvedThemePalette,
+      loading: () => AppThemePalette.defaultPalette,
+      error: (_, __) => AppThemePalette.defaultPalette,
+    );
+    final localePreference = settings.when(
+      data: (s) => s.resolvedLocale,
+      loading: () => AppLocalePreference.system,
+      error: (_, __) => AppLocalePreference.system,
+    );
 
     return MaterialApp(
       title: 'Pomodoro app',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green, brightness: Brightness.light),
-        appBarTheme: AppBarTheme(backgroundColor: Colors.green[400], foregroundColor: Colors.white),
-        snackBarTheme: SnackBarThemeData(
-          backgroundColor: Colors.green[400],
-          contentTextStyle: TextStyle(color: Colors.white),
-        ),
-        extensions: [
-          AlertColors(
-            info: Colors.blue.shade800,
-            warning: Colors.orange.shade800,
-            success: Colors.green.shade800,
-            danger: Colors.red.shade800,
-          ),
-          TimerColors(
-            activity: Colors.green[300]!,
-            inactivity: Colors.grey[500]!,
-            rest: Colors.blue[400]!,
-            pause: Colors.yellow[300]!,
-            postpone: Colors.deepPurple[300]!,
-            resume: Colors.green[300]!,
-          ),
-        ],
-      ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green[800]!, brightness: Brightness.dark),
-        appBarTheme: AppBarTheme(backgroundColor: Colors.green[900], foregroundColor: Colors.white),
-        snackBarTheme: SnackBarThemeData(
-          backgroundColor: Colors.green[800],
-          contentTextStyle: TextStyle(color: Colors.white),
-        ),
-        useMaterial3: true,
-        extensions: [
-          AlertColors(
-            info: Colors.blue.shade800,
-            warning: Colors.orange.shade800,
-            success: Colors.green.shade800,
-            danger: Colors.red.shade800,
-          ),
-          TimerColors(
-            activity: Colors.green[800]!,
-            inactivity: Colors.grey[700]!,
-            rest: Colors.blue[900]!,
-            pause: Colors.yellow[800]!,
-            postpone: Colors.deepPurple[800]!,
-            resume: Colors.green[300]!,
-          ),
-        ],
-      ),
+      theme: buildAppTheme(themePalette, Brightness.light),
+      darkTheme: buildAppTheme(themePalette, Brightness.dark),
       themeMode: _resolveThemeMode(themePreference),
+      locale: _resolveLocale(localePreference),
       initialRoute: IntegrationConstant.homeRouteName,
       routes: {
         IntegrationConstant.homeRouteName: (_) => const HomeScreen(),

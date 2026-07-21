@@ -3,6 +3,8 @@ import 'package:pomodoro_sczuw/models/pomodoro_settings.dart';
 import 'package:hive/hive.dart';
 import 'package:pomodoro_sczuw/services/hive_service.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
+import 'package:pomodoro_sczuw/utils/consts/app_locale_preference.dart';
+import 'package:pomodoro_sczuw/utils/consts/app_theme_palette.dart';
 import 'package:pomodoro_sczuw/utils/consts/app_theme_preference.dart';
 import 'package:pomodoro_sczuw/utils/consts/sound_preset.dart';
 
@@ -17,10 +19,17 @@ class PomodoroSettingsNotifier extends AsyncNotifier<PomodoroSettings> {
   Future<PomodoroSettings> build() async {
     _settingsBox = await HiveService.openBox<PomodoroSettings>(_boxName);
 
-    final settings = _settingsBox.get(_settingsKey);
+    PomodoroSettings? settings;
+    try {
+      settings = _settingsBox.get(_settingsKey);
+    } catch (_) {
+      settings = null;
+    }
 
     if (settings != null) {
-      return settings;
+      final migrated = settings.rehydrate();
+      await _settingsBox.put(_settingsKey, migrated);
+      return migrated;
     }
 
     final initialSettings = PomodoroSettings.initial();
@@ -99,6 +108,22 @@ class PomodoroSettingsNotifier extends AsyncNotifier<PomodoroSettings> {
     if (!AppThemePreference.isAllowed(themeMode)) return;
 
     await _saveSettings(currentState.copyWith(themeMode: themeMode));
+  }
+
+  Future<void> updateThemePalette(String themePalette) async {
+    final currentState = state.value;
+    if (currentState == null) return;
+    if (!AppThemePalette.isAllowed(themePalette)) return;
+
+    await _saveSettings(currentState.copyWith(themePalette: themePalette));
+  }
+
+  Future<void> updateLocale(String locale) async {
+    final currentState = state.value;
+    if (currentState == null) return;
+    if (!AppLocalePreference.isAllowed(locale)) return;
+
+    await _saveSettings(currentState.copyWith(locale: locale));
   }
 
   Future<void> _updateSoundField(

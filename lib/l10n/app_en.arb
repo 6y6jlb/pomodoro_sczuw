@@ -98,5 +98,19 @@
     "theme_sectionTitle": "Theme",
     "theme_system": "System",
     "theme_light": "Light",
-    "theme_dark": "Dark"
+    "theme_dark": "Dark",
+    "theme_paletteSection": "Palette",
+    "theme_paletteDefault": "Default",
+    "theme_paletteSage": "Sage",
+    "theme_paletteMist": "Mist",
+    "theme_paletteSand": "Sand",
+    "settings_sectionSession": "Session",
+    "settings_sectionAppearance": "Appearance",
+    "settings_sectionRestOverlay": "Rest overlay",
+    "settings_sectionSounds": "Sounds",
+    "settings_sectionTelegram": "Telegram",
+    "language_sectionTitle": "Language",
+    "language_system": "System",
+    "language_en": "English",
+    "language_ru": "Russian"
 }
