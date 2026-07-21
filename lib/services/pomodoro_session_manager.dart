@@ -3,6 +3,7 @@ import 'package:pomodoro_sczuw/models/pomodoro_session.dart';
 import 'package:pomodoro_sczuw/services/abstract/timer_service.dart';
 import 'package:pomodoro_sczuw/events/timer_events.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
+import 'package:pomodoro_sczuw/enums/sound_event.dart';
 import 'package:pomodoro_sczuw/services/sound_service.dart';
 import 'package:pomodoro_sczuw/models/pomodoro_settings.dart';
 
@@ -83,7 +84,7 @@ class PomodoroSessionManager {
 
     final nextState = _currentSession.state.next();
     changeState(nextState);
-    _soundService.playSound('request');
+    _soundService.playForEvent(SoundEvent.sessionComplete, _settings);
   }
 
   void _updateSession(PomodoroSession session) {

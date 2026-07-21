@@ -532,6 +532,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pomodoro: test'**
   String get telegram_test;
+
+  /// No description provided for @restOverlay_sectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest overlay'**
+  String get restOverlay_sectionTitle;
+
+  /// No description provided for @restOverlay_enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Show over all windows during rest'**
+  String get restOverlay_enabled;
+
+  /// No description provided for @restOverlay_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to rest'**
+  String get restOverlay_title;
+
+  /// No description provided for @restOverlay_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a short break — your eyes and body will thank you.'**
+  String get restOverlay_subtitle;
+
+  /// No description provided for @restOverlay_dismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get restOverlay_dismiss;
+
+  /// No description provided for @restOverlay_tip1.
+  ///
+  /// In en, this message translates to:
+  /// **'Stand up, walk for a minute, and stretch your neck.'**
+  String get restOverlay_tip1;
+
+  /// No description provided for @restOverlay_tip2.
+  ///
+  /// In en, this message translates to:
+  /// **'Look into the distance for 20 seconds to rest your eyes.'**
+  String get restOverlay_tip2;
+
+  /// No description provided for @restOverlay_tip3.
+  ///
+  /// In en, this message translates to:
+  /// **'Drink some water and take a few deep breaths.'**
+  String get restOverlay_tip3;
+
+  /// No description provided for @restOverlay_tip4.
+  ///
+  /// In en, this message translates to:
+  /// **'Step away from the screen and roll your shoulders.'**
+  String get restOverlay_tip4;
+
+  /// No description provided for @sounds_sectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sounds'**
+  String get sounds_sectionTitle;
+
+  /// No description provided for @sounds_userAction.
+  ///
+  /// In en, this message translates to:
+  /// **'User actions'**
+  String get sounds_userAction;
+
+  /// No description provided for @sounds_sessionComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer complete'**
+  String get sounds_sessionComplete;
+
+  /// No description provided for @sounds_stateActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to activity'**
+  String get sounds_stateActivity;
+
+  /// No description provided for @sounds_stateRest.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to rest'**
+  String get sounds_stateRest;
+
+  /// No description provided for @sounds_stateInactivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to inactivity'**
+  String get sounds_stateInactivity;
+
+  /// No description provided for @sounds_presetOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get sounds_presetOff;
+
+  /// No description provided for @sounds_presetToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'toggle'**
+  String get sounds_presetToggle;
+
+  /// No description provided for @sounds_presetRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'request'**
+  String get sounds_presetRequest;
+
+  /// No description provided for @sounds_chooseFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose file'**
+  String get sounds_chooseFile;
+
+  /// No description provided for @sounds_resetDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get sounds_resetDefault;
+
+  /// No description provided for @sounds_defaultLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get sounds_defaultLabel;
+
+  /// No description provided for @sounds_customFileInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid or missing audio file'**
+  String get sounds_customFileInvalid;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

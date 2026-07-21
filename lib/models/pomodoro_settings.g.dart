@@ -22,13 +22,19 @@ class PomodoroSettingsAdapter extends TypeAdapter<PomodoroSettings> {
       telegramEnabled: fields[2] == null ? false : fields[2] as bool,
       telegramBotToken: fields[3] == null ? '' : fields[3] as String,
       telegramChatId: fields[4] == null ? '' : fields[4] as String,
+      restOverlayEnabled: fields[5] == null ? false : fields[5] as bool,
+      soundUserAction: fields[6] == null ? 'toggle' : fields[6] as String,
+      soundSessionComplete: fields[7] == null ? 'request' : fields[7] as String,
+      soundStateActivity: fields[8] == null ? '' : fields[8] as String,
+      soundStateRest: fields[9] == null ? '' : fields[9] as String,
+      soundStateInactivity: fields[10] == null ? '' : fields[10] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, PomodoroSettings obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.sessionDuration)
       ..writeByte(1)
@@ -38,7 +44,19 @@ class PomodoroSettingsAdapter extends TypeAdapter<PomodoroSettings> {
       ..writeByte(3)
       ..write(obj.telegramBotToken)
       ..writeByte(4)
-      ..write(obj.telegramChatId);
+      ..write(obj.telegramChatId)
+      ..writeByte(5)
+      ..write(obj.restOverlayEnabled)
+      ..writeByte(6)
+      ..write(obj.soundUserAction)
+      ..writeByte(7)
+      ..write(obj.soundSessionComplete)
+      ..writeByte(8)
+      ..write(obj.soundStateActivity)
+      ..writeByte(9)
+      ..write(obj.soundStateRest)
+      ..writeByte(10)
+      ..write(obj.soundStateInactivity);
   }
 
   @override

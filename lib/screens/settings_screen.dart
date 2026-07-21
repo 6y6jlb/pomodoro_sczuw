@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:file_selector/file_selector.dart';
+import 'package:path/path.dart' as p;
 import 'package:pomodoro_sczuw/enums/session_state.dart';
 import 'package:pomodoro_sczuw/services/integrations/telegram_integration.dart';
 import 'package:pomodoro_sczuw/services/l10n.dart';
+import 'package:pomodoro_sczuw/utils/consts/sound_preset.dart';
 import 'package:pomodoro_sczuw/utils/styles/app_text_styles.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_sczuw/providers/session_provider.dart';
@@ -183,6 +186,79 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ),
                 const SizedBox(height: 24),
                 Text(
+                  L10n().t.restOverlay_sectionTitle,
+                  style: const TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(L10n().t.restOverlay_enabled),
+                  value: settings.restOverlayEnabled,
+                  onChanged: (value) {
+                    ref
+                        .read(pomodoroSettingsProvider.notifier)
+                        .updateRestOverlayEnabled(value);
+                  },
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  L10n().t.sounds_sectionTitle,
+                  style: const TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                _SoundEventSetting(
+                  label: L10n().t.sounds_userAction,
+                  value: settings.soundUserAction,
+                  defaultValue: SoundPreset.toggle,
+                  onChanged: (value) {
+                    ref
+                        .read(pomodoroSettingsProvider.notifier)
+                        .updateSoundUserAction(value);
+                  },
+                ),
+                _SoundEventSetting(
+                  label: L10n().t.sounds_sessionComplete,
+                  value: settings.soundSessionComplete,
+                  defaultValue: SoundPreset.request,
+                  onChanged: (value) {
+                    ref
+                        .read(pomodoroSettingsProvider.notifier)
+                        .updateSoundSessionComplete(value);
+                  },
+                ),
+                _SoundEventSetting(
+                  label: L10n().t.sounds_stateActivity,
+                  value: settings.soundStateActivity,
+                  defaultValue: SoundPreset.off,
+                  onChanged: (value) {
+                    ref
+                        .read(pomodoroSettingsProvider.notifier)
+                        .updateSoundStateActivity(value);
+                  },
+                ),
+                _SoundEventSetting(
+                  label: L10n().t.sounds_stateRest,
+                  value: settings.soundStateRest,
+                  defaultValue: SoundPreset.off,
+                  onChanged: (value) {
+                    ref
+                        .read(pomodoroSettingsProvider.notifier)
+                        .updateSoundStateRest(value);
+                  },
+                ),
+                _SoundEventSetting(
+                  label: L10n().t.sounds_stateInactivity,
+                  value: settings.soundStateInactivity,
+                  defaultValue: SoundPreset.off,
+                  onChanged: (value) {
+                    ref
+                        .read(pomodoroSettingsProvider.notifier)
+                        .updateSoundStateInactivity(value);
+                  },
+                ),
+                const SizedBox(height: 24),
+                Text(
                   L10n().t.telegram_sectionTitle,
                   style: const TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
@@ -267,6 +343,131 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(child: Text('Error: $error')),
+      ),
+    );
+  }
+}
+
+class _SoundEventSetting extends StatelessWidget {
+  const _SoundEventSetting({
+    required this.label,
+    required this.value,
+    required this.defaultValue,
+    required this.onChanged,
+  });
+
+  final String label;
+  final String value;
+  final String defaultValue;
+  final ValueChanged<String> onChanged;
+
+  bool get _isDefaultSelected => value == defaultValue;
+  bool get _isOffSelected => SoundPreset.isOff(value) && !_isDefaultSelected;
+  bool get _isCustomSelected => !_isDefaultSelected && !SoundPreset.isOff(value);
+
+  Future<void> _chooseFile(BuildContext context) async {
+    const typeGroup = XTypeGroup(
+      label: 'audio',
+      extensions: ['mp3', 'wav', 'ogg', 'm4a', 'aac'],
+    );
+    final file = await openFile(acceptedTypeGroups: [typeGroup]);
+    if (file == null) return;
+
+    final path = file.path;
+    if (!SoundPreset.isValidCustomPath(path)) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(L10n().t.sounds_customFileInvalid)),
+      );
+      return;
+    }
+    onChanged(path);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = L10n().t;
+    final customLabel = _isCustomSelected ? p.basename(value) : l10n.sounds_chooseFile;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _SoundOptionChip(
+                label: l10n.sounds_resetDefault,
+                selected: _isDefaultSelected,
+                onTap: () => onChanged(defaultValue),
+              ),
+              _SoundOptionChip(
+                label: l10n.sounds_presetOff,
+                selected: _isOffSelected,
+                onTap: () => onChanged(SoundPreset.off),
+              ),
+              _SoundOptionChip(
+                label: customLabel,
+                selected: _isCustomSelected,
+                onTap: () => _chooseFile(context),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SoundOptionChip extends StatelessWidget {
+  const _SoundOptionChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Material(
+      color: colorScheme.surface,
+      borderRadius: BorderRadius.circular(10),
+      elevation: selected ? 2 : 0,
+      shadowColor: Colors.black26,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          constraints: const BoxConstraints(minWidth: 88, maxWidth: 180),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: selected ? colorScheme.outline : colorScheme.outlineVariant.withValues(alpha: 0.5),
+              width: selected ? 1.5 : 1,
+            ),
+          ),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+              color: colorScheme.onSurface,
+            ),
+          ),
+        ),
       ),
     );
   }

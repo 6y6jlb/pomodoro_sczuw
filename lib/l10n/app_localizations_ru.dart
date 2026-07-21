@@ -244,4 +244,70 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get telegram_test => 'Pomodoro: тест';
+
+  @override
+  String get restOverlay_sectionTitle => 'Оверлей отдыха';
+
+  @override
+  String get restOverlay_enabled => 'Показывать поверх всех окон при отдыхе';
+
+  @override
+  String get restOverlay_title => 'Пора отдохнуть';
+
+  @override
+  String get restOverlay_subtitle => 'Сделайте короткий перерыв — глаза и тело скажут спасибо.';
+
+  @override
+  String get restOverlay_dismiss => 'Понятно';
+
+  @override
+  String get restOverlay_tip1 => 'Встаньте, пройдитесь пару минут и разомните шею.';
+
+  @override
+  String get restOverlay_tip2 => 'Посмотрите вдаль на 20 секунд, чтобы дать глазам отдохнуть.';
+
+  @override
+  String get restOverlay_tip3 => 'Выпейте воды и сделайте несколько глубоких вдохов.';
+
+  @override
+  String get restOverlay_tip4 => 'Отойдите от экрана и сделайте лёгкую разминку плеч.';
+
+  @override
+  String get sounds_sectionTitle => 'Звуки';
+
+  @override
+  String get sounds_userAction => 'Действия пользователя';
+
+  @override
+  String get sounds_sessionComplete => 'Завершение таймера';
+
+  @override
+  String get sounds_stateActivity => 'Переход в работу';
+
+  @override
+  String get sounds_stateRest => 'Переход в отдых';
+
+  @override
+  String get sounds_stateInactivity => 'Переход в неактивность';
+
+  @override
+  String get sounds_presetOff => 'Выкл';
+
+  @override
+  String get sounds_presetToggle => 'toggle';
+
+  @override
+  String get sounds_presetRequest => 'request';
+
+  @override
+  String get sounds_chooseFile => 'Выбрать файл';
+
+  @override
+  String get sounds_resetDefault => 'По умолчанию';
+
+  @override
+  String get sounds_defaultLabel => 'По умолчанию';
+
+  @override
+  String get sounds_customFileInvalid => 'Недопустимый или отсутствующий аудиофайл';
 }

@@ -25,27 +25,33 @@
 - **Future**: Android (WorkManager), Windows (similar to Linux)
 
 ### Notifications
-- **Linux**: `flutter_local_notifications` with `LinuxInitializationSettings`
-- **Config**: Position (10,10), icons per state, shows on state change/completion
-- **Future**: Android (channels), Windows (toast)
+- **Linux**: `flutter_local_notifications` with `LinuxInitializationSettings` + per-state PNG icons
+- **Windows**: `WindowsInitializationSettings` (appName / AUMID `com.pomodoro_sczuw.app` / fixed GUID) + `WindowsNotificationDetails`; unpackaged apps can `show` toasts, but cancel/getActive need MSIX
+- **Config**: Linux position (10,10); shows on state change/completion via `SystemNotificationService` singleton (`instance` shared by `AppInitializer` and provider)
+- **Future**: Android (channels)
 
 ### Window Management
 - **Package**: `window_manager` (Linux + Windows desktop)
 - **Behavior**: 400x800px, `setPreventClose(true)` then hide on close (not destroy), show/focus on startup
+- **Rest overlay** (optional, `restOverlayEnabled` in Hive): on enter `rest` → show window, `setAlwaysOnTop(true)`, `setFullScreen(true)`, dimmed `RestOverlayScreen` with tip + dismiss; on leave rest / dismiss / disable setting / window close → restore bounds and flags via `RestOverlayService`
 - **Future**: Android (N/A)
 
 ### System Tray
 - **Package**: `tray_manager` (Linux + Windows desktop)
 - **Behavior**: Icon changes (red=activity, green=rest, gray=inactivity, yellow=paused); Linux `setTitle(MM:SS)`, Windows/macOS `setToolTip(MM:SS)`
 - **Icons**: PNG on Linux, ICO on Windows (`SessionState.trayIcon()`)
-- **Clicks**: left → show/focus window; right → context menu (Windows/macOS)
+- **Clicks**: Linux left → system context menu (AppIndicator); Windows/macOS left → show/focus, right → context menu
+- **Note**: `setToolTip` is Windows/macOS only — calling it on Linux aborts tray init before `setContextMenu`
 - **Menu**: Show window, Exit, Collapse
 - **Future**: Android (N/A)
 
 ### Sound
 - **Package**: `audioplayers` (cross-platform)
-- **Files**: `request.mp3` (complete), `toggle.mp3` (actions)
-- **Future**: All platforms supported, may need audio focus on Android
+- **Events** (`SoundEvent`): `userAction`, `sessionComplete`, `stateActivity`, `stateRest`, `stateInactivity`
+- **Values**: off (`''`), bundled defaults (`toggle` / `request`), or absolute path to `.mp3`/`.wav`/`.ogg`/`.m4a`/`.aac` (validated; no `..`)
+- **Defaults**: userAction→toggle, sessionComplete→request, state*→off
+- **Settings UI**: choose file / reset default / off per event (`file_selector`)
+- **Future**: Android audio focus
 
 ### Integrations
 - **Abstract**: `Integration` (`id`, `handle(IntegrationEvent)`, `dispose()`)
@@ -59,8 +65,7 @@
 - **Future**: All platforms supported (network/IO based)
 
 ### Dependencies
-- **Desktop (Linux + Windows)**: `window_manager`, `tray_manager`
-- **Linux-specific**: `flutter_local_notifications` (Linux init/icons)
+- **Desktop (Linux + Windows)**: `window_manager`, `tray_manager`, `flutter_local_notifications` (Linux + Windows toast)
 - **Cross-platform**: `audioplayers`, `hive_flutter`
 
 ## Main Application Flow
@@ -71,10 +76,11 @@
 ### Providers
 - `timerServiceProvider` → `DesktopTimerService`
 - `soundServiceProvider` → `SoundService`
-- `systemNotificationServiceProvider` → `SystemNotificationService`
+- `systemNotificationServiceProvider` → `SystemNotificationService.instance`
+- `restOverlayServiceProvider` → `RestOverlayService`
 - `integrationBusProvider` → `IntegrationBus` (+ registered `Integration`s)
-- `pomodoroSettingsProvider` → Hive storage
-- `pomodoroSessionManagerProvider` → `PomodoroSessionManager`
+- `pomodoroSettingsProvider` → Hive storage (durations, Telegram, `restOverlayEnabled`, per-event sounds)
+- `pomodoroSessionManagerProvider` → `PomodoroSessionManager` (also wires notifications, state sounds, rest overlay)
 
 ### Timer Lifecycle
 User Action → `SessionNotifier` → `TimerNotifier` → `PomodoroSessionManager` → `TimerService` → `TimerEvent` stream → `_handleTimerEvent()` → `_updateSession()` → UI rebuild
@@ -96,8 +102,9 @@ User Action → `SessionNotifier` → `TimerNotifier` → `PomodoroSessionManage
 - `SessionState` - Enum: `activity`, `rest`, `inactivity`
 
 ### Notifications & Sounds
-- **Notifications**: `onStateChanged` (state change), `onSessionCompleted` (timer complete)
-- **Sounds**: 'toggle' (user actions), 'request' (session complete)
+- **Notifications**: `onStateChanged` (state change), `onSessionCompleted` (timer complete) → Linux/Windows toasts
+- **Sounds**: `playForEvent` from settings — user actions (`SessionNotifier`), session complete (`PomodoroSessionManager`), optional per-state sounds on `onStateChanged`
+- **Rest overlay**: when `restOverlayEnabled`, enter `rest` → `RestOverlayService.show()` + UI overlay; leave rest / dismiss → `hide()`
 
 ### Integrations (runtime)
 - **Session**: `onStateChanged` / pause / resume / complete → `IntegrationBus.publish(...)`

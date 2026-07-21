@@ -8,7 +8,7 @@ class AppInitializer {
     WidgetsFlutterBinding.ensureInitialized();
     await windowManager.ensureInitialized();
 
-    await SystemNotificationService().initialize();
+    await SystemNotificationService.instance.initialize();
 
     await HiveService.init();
   }

@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
+import 'package:pomodoro_sczuw/enums/sound_event.dart';
 import 'package:pomodoro_sczuw/enums/user_action.dart';
 import 'package:pomodoro_sczuw/models/pomodoro_session.dart';
 import 'package:pomodoro_sczuw/models/pomodoro_settings.dart';
@@ -21,6 +22,14 @@ class SessionNotifier extends Notifier<PomodoroSession> {
     );
   }
 
+  PomodoroSettings _settingsOrInitial() {
+    return ref.read(pomodoroSettingsProvider).value ?? PomodoroSettings.initial();
+  }
+
+  void _playUserActionSound() {
+    ref.read(soundServiceProvider).playForEvent(SoundEvent.userAction, _settingsOrInitial());
+  }
+
   void _publishUserAction(UserAction action, {int? durationSeconds}) {
     ref.read(integrationBusProvider).publish(
       UserActionPressed(action: action, durationSeconds: durationSeconds),
@@ -34,49 +43,49 @@ class SessionNotifier extends Notifier<PomodoroSession> {
   void changeStateToNext() {
     _publishUserAction(UserAction.next);
     ref.read(timerProvider.notifier).changeStateToNext();
-    ref.read(soundServiceProvider).playSound('toggle');
+    _playUserActionSound();
   }
 
   void changeStateToInactivity() {
     _publishUserAction(UserAction.inactivity);
     ref.read(timerProvider.notifier).changeStateToInactivity();
-    ref.read(soundServiceProvider).playSound('toggle');
+    _playUserActionSound();
   }
 
   Future<void> start() async {
     _publishUserAction(UserAction.start);
     await ref.read(timerProvider.notifier).start();
-    ref.read(soundServiceProvider).playSound('toggle');
+    _playUserActionSound();
   }
 
   Future<void> pause() async {
     _publishUserAction(UserAction.pause);
     await ref.read(timerProvider.notifier).pause();
-    ref.read(soundServiceProvider).playSound('toggle');
+    _playUserActionSound();
   }
 
   Future<void> postpone(int duration) async {
     _publishUserAction(UserAction.postpone, durationSeconds: duration);
     await ref.read(timerProvider.notifier).postpone(duration);
-    ref.read(soundServiceProvider).playSound('toggle');
+    _playUserActionSound();
   }
 
   Future<void> resume() async {
     _publishUserAction(UserAction.resume);
     await ref.read(timerProvider.notifier).resume();
-    ref.read(soundServiceProvider).playSound('toggle');
+    _playUserActionSound();
   }
 
   Future<void> stop() async {
     _publishUserAction(UserAction.stop);
     await ref.read(timerProvider.notifier).stop();
-    ref.read(soundServiceProvider).playSound('toggle');
+    _playUserActionSound();
   }
 
   Future<void> reset() async {
     _publishUserAction(UserAction.reset);
     await ref.read(timerProvider.notifier).reset();
-    ref.read(soundServiceProvider).playSound('toggle');
+    _playUserActionSound();
   }
 }
 
@@ -84,9 +93,21 @@ final sessionProvider = NotifierProvider<SessionNotifier, PomodoroSession>(() {
   return SessionNotifier();
 });
 
+SoundEvent _soundEventForState(SessionState state) {
+  switch (state) {
+    case SessionState.activity:
+      return SoundEvent.stateActivity;
+    case SessionState.rest:
+      return SoundEvent.stateRest;
+    case SessionState.inactivity:
+      return SoundEvent.stateInactivity;
+  }
+}
+
 final pomodoroSessionManagerProvider = Provider<PomodoroSessionManager>((ref) {
   final timerService = ref.read(timerServiceProvider);
   final soundService = ref.read(soundServiceProvider);
+  final restOverlayService = ref.read(restOverlayServiceProvider);
 
   final settingsAsync = ref.read(pomodoroSettingsProvider);
   final initialSettings = settingsAsync.when(
@@ -100,8 +121,14 @@ final pomodoroSessionManagerProvider = Provider<PomodoroSessionManager>((ref) {
   final integrationBus = ref.read(integrationBusProvider);
 
   ref.listen(pomodoroSettingsProvider, (previous, next) {
-    if (next.hasValue) {
-      sessionManager.updateSettings(next.requireValue);
+    if (!next.hasValue) return;
+
+    final settings = next.requireValue;
+    sessionManager.updateSettings(settings);
+
+    final wasEnabled = previous?.value?.restOverlayEnabled ?? false;
+    if (wasEnabled && !settings.restOverlayEnabled && restOverlayService.isVisible) {
+      restOverlayService.hide();
     }
   });
 
@@ -111,6 +138,20 @@ final pomodoroSessionManagerProvider = Provider<PomodoroSessionManager>((ref) {
     } catch (e) {
       print('Error sending state change notification: $e');
     }
+
+    try {
+      soundService.playForEvent(_soundEventForState(newState), sessionManager.settings);
+    } catch (e) {
+      print('Error playing state change sound: $e');
+    }
+
+    final overlayEnabled = sessionManager.settings.restOverlayEnabled;
+    if (overlayEnabled && newState == SessionState.rest) {
+      restOverlayService.show();
+    } else if (restOverlayService.isVisible && newState != SessionState.rest) {
+      restOverlayService.hide();
+    }
+
     integrationBus.publish(
       SessionStatusChanged(
         from: previousState ?? newState,

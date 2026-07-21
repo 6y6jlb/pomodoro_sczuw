@@ -6,10 +6,13 @@ import 'package:pomodoro_sczuw/enums/session_state.dart';
 import 'package:pomodoro_sczuw/l10n/app_localizations.dart';
 import 'package:pomodoro_sczuw/models/pomodoro_session.dart';
 import 'package:pomodoro_sczuw/providers/service_providers.dart';
+import 'package:pomodoro_sczuw/providers/session_provider.dart';
 import 'package:pomodoro_sczuw/providers/timer_provider.dart';
 import 'package:pomodoro_sczuw/screens/home_screen.dart';
+import 'package:pomodoro_sczuw/screens/rest_overlay_screen.dart';
 import 'package:pomodoro_sczuw/services/integrations/integration_navigator_observer.dart';
 import 'package:pomodoro_sczuw/services/l10n.dart';
+import 'package:pomodoro_sczuw/services/rest_overlay_service.dart';
 import 'package:pomodoro_sczuw/theme/alert_colors.dart';
 import 'package:pomodoro_sczuw/theme/timer_colors.dart';
 import 'package:pomodoro_sczuw/utils/consts/integration_constant.dart';
@@ -25,20 +28,43 @@ class App extends ConsumerStatefulWidget {
 
 class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
   late final IntegrationNavigatorObserver _integrationNavigatorObserver;
+  late final RestOverlayService _restOverlayService;
+  int _restTipIndex = 0;
+  bool _restOverlayVisible = false;
 
   @override
   void initState() {
     super.initState();
     _integrationNavigatorObserver = IntegrationNavigatorObserver(ref.read(integrationBusProvider));
+    _restOverlayService = ref.read(restOverlayServiceProvider);
     windowManager.addListener(this);
     trayManager.addListener(this);
     _initTray();
     _initWindowManager();
+
+    // Ensure session manager (and its rest-overlay wiring) is created.
+    ref.read(pomodoroSessionManagerProvider);
+
+    _restOverlayVisible = _restOverlayService.isVisible;
+    _restOverlayService.addListener(_onRestOverlayChanged);
+  }
+
+  void _onRestOverlayChanged() {
+    final visible = _restOverlayService.isVisible;
+    if (!mounted) return;
+    setState(() {
+      if (visible && !_restOverlayVisible) {
+        _restTipIndex++;
+      }
+      _restOverlayVisible = visible;
+    });
   }
 
   Future<void> _initTray() async {
     await trayManager.setIcon(SessionState.activity.trayIcon());
-    await trayManager.setToolTip('Pomodoro');
+    if (Platform.isWindows || Platform.isMacOS) {
+      await trayManager.setToolTip('Pomodoro');
+    }
     await trayManager.setContextMenu(
       Menu(
         items: [
@@ -100,6 +126,7 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
 
   @override
   void dispose() {
+    _restOverlayService.removeListener(_onRestOverlayChanged);
     windowManager.removeListener(this);
     trayManager.removeListener(this);
     super.dispose();
@@ -107,16 +134,23 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
 
   @override
   void onWindowClose() async {
+    if (_restOverlayService.isVisible) {
+      await _restOverlayService.hide();
+    }
     await windowManager.hide();
   }
 
   @override
   void onTrayIconMouseDown() {
+    // Linux AppIndicator shows the context menu on left click; popUpContextMenu is unsupported.
+    // Steal the click only on platforms where the menu is opened via right-click.
+    if (Platform.isLinux) return;
     _showWindow();
   }
 
   @override
   void onTrayIconRightMouseDown() {
+    if (Platform.isLinux) return;
     trayManager.popUpContextMenu();
   }
 
@@ -211,7 +245,20 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
       builder: (context, child) {
         // Инициализация сервиса локализации
         L10n().initialize(context);
-        return child!;
+        return Stack(
+          children: [
+            child!,
+            if (_restOverlayVisible)
+              Positioned.fill(
+                child: RestOverlayScreen(
+                  tipIndex: _restTipIndex,
+                  onDismiss: () {
+                    _restOverlayService.hide();
+                  },
+                ),
+              ),
+          ],
+        );
       },
     );
   }

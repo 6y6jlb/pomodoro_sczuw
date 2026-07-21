@@ -3,6 +3,7 @@ import 'package:pomodoro_sczuw/models/pomodoro_settings.dart';
 import 'package:hive/hive.dart';
 import 'package:pomodoro_sczuw/services/hive_service.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
+import 'package:pomodoro_sczuw/utils/consts/sound_preset.dart';
 
 /// Notifier для управления настройками Pomodoro с автоматическим сохранением в Hive
 class PomodoroSettingsNotifier extends AsyncNotifier<PomodoroSettings> {
@@ -62,6 +63,53 @@ class PomodoroSettingsNotifier extends AsyncNotifier<PomodoroSettings> {
     if (currentState == null) return;
 
     await _saveSettings(currentState.copyWith(telegramChatId: chatId));
+  }
+
+  Future<void> updateRestOverlayEnabled(bool enabled) async {
+    final currentState = state.value;
+    if (currentState == null) return;
+
+    await _saveSettings(currentState.copyWith(restOverlayEnabled: enabled));
+  }
+
+  Future<void> updateSoundUserAction(String soundKey) async {
+    await _updateSoundField((settings) => settings.copyWith(soundUserAction: soundKey));
+  }
+
+  Future<void> updateSoundSessionComplete(String soundKey) async {
+    await _updateSoundField((settings) => settings.copyWith(soundSessionComplete: soundKey));
+  }
+
+  Future<void> updateSoundStateActivity(String soundKey) async {
+    await _updateSoundField((settings) => settings.copyWith(soundStateActivity: soundKey));
+  }
+
+  Future<void> updateSoundStateRest(String soundKey) async {
+    await _updateSoundField((settings) => settings.copyWith(soundStateRest: soundKey));
+  }
+
+  Future<void> updateSoundStateInactivity(String soundKey) async {
+    await _updateSoundField((settings) => settings.copyWith(soundStateInactivity: soundKey));
+  }
+
+  Future<void> _updateSoundField(
+    PomodoroSettings Function(PomodoroSettings current) update,
+  ) async {
+    final currentState = state.value;
+    if (currentState == null) return;
+
+    final newSettings = update(currentState);
+    if (!_areSoundKeysAllowed(newSettings)) return;
+
+    await _saveSettings(newSettings);
+  }
+
+  bool _areSoundKeysAllowed(PomodoroSettings settings) {
+    return SoundPreset.isAllowed(settings.soundUserAction) &&
+        SoundPreset.isAllowed(settings.soundSessionComplete) &&
+        SoundPreset.isAllowed(settings.soundStateActivity) &&
+        SoundPreset.isAllowed(settings.soundStateRest) &&
+        SoundPreset.isAllowed(settings.soundStateInactivity);
   }
 
   Future<void> resetSessionDurationsToDefaults() async {

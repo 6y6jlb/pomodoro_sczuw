@@ -244,4 +244,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get telegram_test => 'Pomodoro: test';
+
+  @override
+  String get restOverlay_sectionTitle => 'Rest overlay';
+
+  @override
+  String get restOverlay_enabled => 'Show over all windows during rest';
+
+  @override
+  String get restOverlay_title => 'Time to rest';
+
+  @override
+  String get restOverlay_subtitle => 'Take a short break — your eyes and body will thank you.';
+
+  @override
+  String get restOverlay_dismiss => 'Got it';
+
+  @override
+  String get restOverlay_tip1 => 'Stand up, walk for a minute, and stretch your neck.';
+
+  @override
+  String get restOverlay_tip2 => 'Look into the distance for 20 seconds to rest your eyes.';
+
+  @override
+  String get restOverlay_tip3 => 'Drink some water and take a few deep breaths.';
+
+  @override
+  String get restOverlay_tip4 => 'Step away from the screen and roll your shoulders.';
+
+  @override
+  String get sounds_sectionTitle => 'Sounds';
+
+  @override
+  String get sounds_userAction => 'User actions';
+
+  @override
+  String get sounds_sessionComplete => 'Timer complete';
+
+  @override
+  String get sounds_stateActivity => 'Switch to activity';
+
+  @override
+  String get sounds_stateRest => 'Switch to rest';
+
+  @override
+  String get sounds_stateInactivity => 'Switch to inactivity';
+
+  @override
+  String get sounds_presetOff => 'Off';
+
+  @override
+  String get sounds_presetToggle => 'toggle';
+
+  @override
+  String get sounds_presetRequest => 'request';
+
+  @override
+  String get sounds_chooseFile => 'Choose file';
+
+  @override
+  String get sounds_resetDefault => 'Default';
+
+  @override
+  String get sounds_defaultLabel => 'Default';
+
+  @override
+  String get sounds_customFileInvalid => 'Invalid or missing audio file';
 }
