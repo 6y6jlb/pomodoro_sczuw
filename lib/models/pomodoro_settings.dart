@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
 import 'package:pomodoro_sczuw/enums/sound_event.dart';
+import 'package:pomodoro_sczuw/utils/consts/app_theme_preference.dart';
 import 'package:pomodoro_sczuw/utils/consts/sound_preset.dart';
 
 part 'pomodoro_settings.g.dart';
@@ -40,6 +41,9 @@ class PomodoroSettings extends HiveObject {
   @HiveField(10, defaultValue: SoundPreset.off)
   final String soundStateInactivity;
 
+  @HiveField(11, defaultValue: AppThemePreference.system)
+  final String themeMode;
+
   PomodoroSettings({
     required this.sessionDuration,
     required this.breakDuration,
@@ -52,6 +56,7 @@ class PomodoroSettings extends HiveObject {
     this.soundStateActivity = SoundPreset.off,
     this.soundStateRest = SoundPreset.off,
     this.soundStateInactivity = SoundPreset.off,
+    this.themeMode = AppThemePreference.system,
   });
 
   factory PomodoroSettings.initial() {
@@ -88,6 +93,7 @@ class PomodoroSettings extends HiveObject {
     String? soundStateActivity,
     String? soundStateRest,
     String? soundStateInactivity,
+    String? themeMode,
   }) {
     return PomodoroSettings(
       sessionDuration: sessionDuration ?? this.sessionDuration,
@@ -101,6 +107,7 @@ class PomodoroSettings extends HiveObject {
       soundStateActivity: soundStateActivity ?? this.soundStateActivity,
       soundStateRest: soundStateRest ?? this.soundStateRest,
       soundStateInactivity: soundStateInactivity ?? this.soundStateInactivity,
+      themeMode: themeMode ?? this.themeMode,
     );
   }
 }

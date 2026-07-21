@@ -94,5 +94,9 @@
     "sounds_chooseFile": "Choose file",
     "sounds_resetDefault": "Default",
     "sounds_defaultLabel": "Default",
-    "sounds_customFileInvalid": "Invalid or missing audio file"
+    "sounds_customFileInvalid": "Invalid or missing audio file",
+    "theme_sectionTitle": "Theme",
+    "theme_system": "System",
+    "theme_light": "Light",
+    "theme_dark": "Dark"
 }

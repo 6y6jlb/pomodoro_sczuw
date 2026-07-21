@@ -5,9 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
 import 'package:pomodoro_sczuw/l10n/app_localizations.dart';
 import 'package:pomodoro_sczuw/models/pomodoro_session.dart';
+import 'package:pomodoro_sczuw/providers/pomodoro_settings_provider.dart';
 import 'package:pomodoro_sczuw/providers/service_providers.dart';
 import 'package:pomodoro_sczuw/providers/session_provider.dart';
 import 'package:pomodoro_sczuw/providers/timer_provider.dart';
+import 'package:pomodoro_sczuw/utils/consts/app_theme_preference.dart';
 import 'package:pomodoro_sczuw/screens/home_screen.dart';
 import 'package:pomodoro_sczuw/screens/rest_overlay_screen.dart';
 import 'package:pomodoro_sczuw/services/integrations/integration_navigator_observer.dart';
@@ -166,6 +168,18 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
     }
   }
 
+  ThemeMode _resolveThemeMode(String preference) {
+    switch (AppThemePreference.normalize(preference)) {
+      case AppThemePreference.light:
+        return ThemeMode.light;
+      case AppThemePreference.dark:
+        return ThemeMode.dark;
+      case AppThemePreference.system:
+      default:
+        return ThemeMode.system;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.listen<AsyncValue<PomodoroSession>>(timerProvider, (previous, next) {
@@ -173,6 +187,12 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
         _updateTrayAttributes(session);
       });
     });
+
+    final themePreference = ref.watch(pomodoroSettingsProvider).when(
+          data: (settings) => settings.themeMode,
+          loading: () => AppThemePreference.system,
+          error: (_, __) => AppThemePreference.system,
+        );
 
     return MaterialApp(
       title: 'Pomodoro app',
@@ -225,7 +245,7 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
           ),
         ],
       ),
-      themeMode: ThemeMode.system,
+      themeMode: _resolveThemeMode(themePreference),
       initialRoute: IntegrationConstant.homeRouteName,
       routes: {
         IntegrationConstant.homeRouteName: (_) => const HomeScreen(),

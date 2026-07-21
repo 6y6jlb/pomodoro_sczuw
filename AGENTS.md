@@ -79,7 +79,7 @@
 - `systemNotificationServiceProvider` → `SystemNotificationService.instance`
 - `restOverlayServiceProvider` → `RestOverlayService`
 - `integrationBusProvider` → `IntegrationBus` (+ registered `Integration`s)
-- `pomodoroSettingsProvider` → Hive storage (durations, Telegram, `restOverlayEnabled`, per-event sounds)
+- `pomodoroSettingsProvider` → Hive storage (durations, Telegram, `restOverlayEnabled`, per-event sounds, `themeMode`: system/light/dark)
 - `pomodoroSessionManagerProvider` → `PomodoroSessionManager` (also wires notifications, state sounds, rest overlay)
 
 ### Timer Lifecycle

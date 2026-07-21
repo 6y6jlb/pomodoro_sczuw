@@ -310,4 +310,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sounds_customFileInvalid => 'Invalid or missing audio file';
+
+  @override
+  String get theme_sectionTitle => 'Theme';
+
+  @override
+  String get theme_system => 'System';
+
+  @override
+  String get theme_light => 'Light';
+
+  @override
+  String get theme_dark => 'Dark';
 }

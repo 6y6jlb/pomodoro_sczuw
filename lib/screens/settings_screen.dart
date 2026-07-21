@@ -4,6 +4,7 @@ import 'package:path/path.dart' as p;
 import 'package:pomodoro_sczuw/enums/session_state.dart';
 import 'package:pomodoro_sczuw/services/integrations/telegram_integration.dart';
 import 'package:pomodoro_sczuw/services/l10n.dart';
+import 'package:pomodoro_sczuw/utils/consts/app_theme_preference.dart';
 import 'package:pomodoro_sczuw/utils/consts/sound_preset.dart';
 import 'package:pomodoro_sczuw/utils/styles/app_text_styles.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -183,6 +184,48 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     },
                     child: Text(L10n().t.action_resetToDefaults),
                   ),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  L10n().t.theme_sectionTitle,
+                  style: const TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  alignment: WrapAlignment.center,
+                  children: [
+                    _SettingsOptionChip(
+                      label: L10n().t.theme_system,
+                      selected: AppThemePreference.normalize(settings.themeMode) ==
+                          AppThemePreference.system,
+                      onTap: () {
+                        ref
+                            .read(pomodoroSettingsProvider.notifier)
+                            .updateThemeMode(AppThemePreference.system);
+                      },
+                    ),
+                    _SettingsOptionChip(
+                      label: L10n().t.theme_light,
+                      selected: settings.themeMode == AppThemePreference.light,
+                      onTap: () {
+                        ref
+                            .read(pomodoroSettingsProvider.notifier)
+                            .updateThemeMode(AppThemePreference.light);
+                      },
+                    ),
+                    _SettingsOptionChip(
+                      label: L10n().t.theme_dark,
+                      selected: settings.themeMode == AppThemePreference.dark,
+                      onTap: () {
+                        ref
+                            .read(pomodoroSettingsProvider.notifier)
+                            .updateThemeMode(AppThemePreference.dark);
+                      },
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 24),
                 Text(
@@ -400,17 +443,17 @@ class _SoundEventSetting extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: [
-              _SoundOptionChip(
+              _SettingsOptionChip(
                 label: l10n.sounds_resetDefault,
                 selected: _isDefaultSelected,
                 onTap: () => onChanged(defaultValue),
               ),
-              _SoundOptionChip(
+              _SettingsOptionChip(
                 label: l10n.sounds_presetOff,
                 selected: _isOffSelected,
                 onTap: () => onChanged(SoundPreset.off),
               ),
-              _SoundOptionChip(
+              _SettingsOptionChip(
                 label: customLabel,
                 selected: _isCustomSelected,
                 onTap: () => _chooseFile(context),
@@ -423,8 +466,8 @@ class _SoundEventSetting extends StatelessWidget {
   }
 }
 
-class _SoundOptionChip extends StatelessWidget {
-  const _SoundOptionChip({
+class _SettingsOptionChip extends StatelessWidget {
+  const _SettingsOptionChip({
     required this.label,
     required this.selected,
     required this.onTap,

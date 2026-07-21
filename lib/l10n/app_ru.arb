@@ -94,5 +94,9 @@
     "sounds_chooseFile": "Выбрать файл",
     "sounds_resetDefault": "По умолчанию",
     "sounds_defaultLabel": "По умолчанию",
-    "sounds_customFileInvalid": "Недопустимый или отсутствующий аудиофайл"
+    "sounds_customFileInvalid": "Недопустимый или отсутствующий аудиофайл",
+    "theme_sectionTitle": "Тема",
+    "theme_system": "Системная",
+    "theme_light": "Светлая",
+    "theme_dark": "Тёмная"
 }

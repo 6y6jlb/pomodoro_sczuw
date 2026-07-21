@@ -310,4 +310,16 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get sounds_customFileInvalid => 'Недопустимый или отсутствующий аудиофайл';
+
+  @override
+  String get theme_sectionTitle => 'Тема';
+
+  @override
+  String get theme_system => 'Системная';
+
+  @override
+  String get theme_light => 'Светлая';
+
+  @override
+  String get theme_dark => 'Тёмная';
 }

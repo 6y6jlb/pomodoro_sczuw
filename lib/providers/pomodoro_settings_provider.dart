@@ -3,6 +3,7 @@ import 'package:pomodoro_sczuw/models/pomodoro_settings.dart';
 import 'package:hive/hive.dart';
 import 'package:pomodoro_sczuw/services/hive_service.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
+import 'package:pomodoro_sczuw/utils/consts/app_theme_preference.dart';
 import 'package:pomodoro_sczuw/utils/consts/sound_preset.dart';
 
 /// Notifier для управления настройками Pomodoro с автоматическим сохранением в Hive
@@ -90,6 +91,14 @@ class PomodoroSettingsNotifier extends AsyncNotifier<PomodoroSettings> {
 
   Future<void> updateSoundStateInactivity(String soundKey) async {
     await _updateSoundField((settings) => settings.copyWith(soundStateInactivity: soundKey));
+  }
+
+  Future<void> updateThemeMode(String themeMode) async {
+    final currentState = state.value;
+    if (currentState == null) return;
+    if (!AppThemePreference.isAllowed(themeMode)) return;
+
+    await _saveSettings(currentState.copyWith(themeMode: themeMode));
   }
 
   Future<void> _updateSoundField(
