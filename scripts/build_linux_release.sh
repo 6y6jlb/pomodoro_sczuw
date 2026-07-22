@@ -91,6 +91,10 @@ echo "Folder style: $FOLDER_STYLE"
 echo "Linux arch: $ARCH"
 echo 'Running: flutter build linux --release'
 
+# Flutter may skip creating this when no package has Dart FFI native assets;
+# CMake still expects the path unless linux/CMakeLists.txt guards with EXISTS.
+mkdir -p "$PROJECT_ROOT/build/native_assets/linux"
+
 flutter build linux --release
 
 if [[ ! -x "$BINARY_PATH" ]]; then

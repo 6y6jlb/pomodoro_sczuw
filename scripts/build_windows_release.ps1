@@ -75,6 +75,10 @@ Write-Host "App version: $AppVersion"
 Write-Host "Folder style: $FolderStyle"
 Write-Host 'Running: flutter build windows --release'
 
+# Flutter may skip creating this when no package has Dart FFI native assets;
+# CMake still expects the path unless windows/CMakeLists.txt guards with EXISTS.
+New-Item -ItemType Directory -Force -Path (Join-Path $ProjectRoot 'build\native_assets\windows') | Out-Null
+
 & $FlutterBat build windows --release
 if ($LASTEXITCODE -ne 0) {
   exit $LASTEXITCODE
