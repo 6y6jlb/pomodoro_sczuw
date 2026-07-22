@@ -102,6 +102,14 @@
 - **Android**: `flutter_foreground_task` (FGS + ongoing notification; initialized only on Android)
 - **Cross-platform**: `flutter_local_notifications` (Linux / Windows / Android), `audioplayers`, `hive_flutter`
 
+### App version
+
+- **SSOT**: repo-root `VERSION` (`semver+build`, e.g. `1.2.0+1`)
+- **Tooling**: `scripts/app_version.sh` / `.ps1` — `sync` writes `pubspec.yaml`; `flutter-args` emits `--build-name` / `--build-number` / `--dart-define=APP_VERSION=…`; `bump major|minor|patch` changes semver only, `bump build` increments `+N` (Android `versionCode`)
+- **Make**: `version-major` / `version-minor` / `version-patch` / `version-build`, or `version VERSION=x.y.z+n`
+- **Make / release**: `run-*`, `build-*`, `release-*` sync + pass those flags so Linux / Windows / Android binaries and the in-app label match
+- **UI**: `appVersionLabelProvider` prefers `APP_VERSION` dart-define, else `PackageInfo` (pubspec-backed)
+
 
 
 ## Main Application Flow

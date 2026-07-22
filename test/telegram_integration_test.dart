@@ -12,6 +12,8 @@ import 'package:pomodoro_sczuw/services/l10n.dart';
 class _RecordingAdapter implements HttpClientAdapter {
   final List<RequestOptions> requests = [];
   bool shouldFail = false;
+  DioExceptionType? failType;
+  Object? failResponseData;
 
   @override
   void close({bool force = false}) {}
@@ -26,7 +28,15 @@ class _RecordingAdapter implements HttpClientAdapter {
     if (shouldFail) {
       throw DioException(
         requestOptions: options,
+        type: failType ?? DioExceptionType.unknown,
         message: 'network error',
+        response: failResponseData == null
+            ? null
+            : Response(
+                requestOptions: options,
+                data: failResponseData,
+                statusCode: 400,
+              ),
       );
     }
     return ResponseBody.fromString(
@@ -156,6 +166,34 @@ void main() {
 
     expect(error, 'Telegram выключен или не заполнены token/chat id');
     expect(adapter.requests, isEmpty);
+    await integration.dispose();
+  });
+
+  test('sendTestMessage returns localized timeout error', () async {
+    adapter.shouldFail = true;
+    adapter.failType = DioExceptionType.connectionTimeout;
+    final integration = createIntegration();
+
+    final error = await integration.sendTestMessage();
+
+    expect(error, 'Connection timed out. Check network or VPN.');
+    expect(error, isNot(contains('DioException')));
+    expect(adapter.requests, hasLength(1));
+    await integration.dispose();
+  });
+
+  test('sendTestMessage returns Telegram API description when present', () async {
+    adapter.shouldFail = true;
+    adapter.failType = DioExceptionType.badResponse;
+    adapter.failResponseData = {
+      'ok': false,
+      'description': 'Bad Request: chat not found',
+    };
+    final integration = createIntegration();
+
+    final error = await integration.sendTestMessage();
+
+    expect(error, 'Bad Request: chat not found');
     await integration.dispose();
   });
 }

@@ -222,6 +222,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get telegram_notConfigured => 'Telegram выключен или не заполнены token/chat id';
 
   @override
+  String get telegram_timeout => 'Таймаут соединения. Проверьте сеть или VPN.';
+
+  @override
+  String get telegram_connectionError => 'Не удалось связаться с Telegram API. Проверьте сеть или VPN.';
+
+  @override
+  String get telegram_requestFailed => 'Запрос не выполнен';
+
+  @override
   String get telegram_started => 'Pomodoro: запуск';
 
   @override

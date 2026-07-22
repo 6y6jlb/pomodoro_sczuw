@@ -2,11 +2,13 @@
 # Builds a runnable Linux Release bundle and copies it to
 # dist/linux/<folder>/ for distribution.
 #
+# Version SSOT: ./VERSION (synced to pubspec.yaml; passed as --build-name/--build-number).
+#
 # Folder naming (default: version + build date/time):
 #   ./scripts/build_linux_release.sh
-#   ./scripts/build_linux_release.sh --folder-style Version      # Pomodoro-1.0.0+1
+#   ./scripts/build_linux_release.sh --folder-style Version      # Pomodoro-<VERSION>
 #   ./scripts/build_linux_release.sh --folder-style Date         # Pomodoro-2026-07-19_133045
-#   ./scripts/build_linux_release.sh --folder-style VersionDate  # Pomodoro-1.0.0+1_2026-07-19_133045
+#   ./scripts/build_linux_release.sh --folder-style VersionDate  # Pomodoro-<VERSION>_2026-07-19_133045
 #
 # Prerequisites: Flutter SDK, Linux desktop toolchain (clang, cmake, ninja, GTK).
 
@@ -21,7 +23,7 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     -h|--help)
-      sed -n '2,12p' "$0"
+      sed -n '2,14p' "$0"
       exit 0
       ;;
     *)
@@ -41,6 +43,7 @@ esac
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
+VERSION_SCRIPT="$PROJECT_ROOT/scripts/app_version.sh"
 
 if ! command -v flutter >/dev/null 2>&1; then
   echo 'flutter not found. Install Flutter or add it to PATH.' >&2
@@ -56,16 +59,6 @@ case "$(uname -m)" in
     ;;
 esac
 
-get_pubspec_version() {
-  local version
-  version="$(sed -n 's/^[[:space:]]*version:[[:space:]]*//p' pubspec.yaml | head -n1 | tr -d '[:space:]')"
-  if [[ -z "$version" ]]; then
-    echo 'Could not read version from pubspec.yaml' >&2
-    exit 1
-  fi
-  printf '%s' "$version"
-}
-
 dist_folder_name() {
   local style="$1"
   local app_version="$2"
@@ -78,7 +71,11 @@ dist_folder_name() {
   esac
 }
 
-APP_VERSION="$(get_pubspec_version)"
+"$VERSION_SCRIPT" sync
+APP_VERSION="$("$VERSION_SCRIPT" print)"
+# shellcheck disable=SC2046
+read -r -a FLUTTER_VERSION_ARGS < <("$VERSION_SCRIPT" flutter-args)
+
 DIST_FOLDER_NAME="$(dist_folder_name "$FOLDER_STYLE" "$APP_VERSION")"
 DIST_ROOT="$PROJECT_ROOT/dist/linux"
 DIST_DIR="$DIST_ROOT/$DIST_FOLDER_NAME"
@@ -86,16 +83,16 @@ RELEASE_DIR="$PROJECT_ROOT/build/linux/$ARCH/release/bundle"
 BINARY_PATH="$RELEASE_DIR/pomodoro_sczuw"
 
 echo "Using Flutter: $(command -v flutter)"
-echo "App version: $APP_VERSION"
+echo "App version: $APP_VERSION (from VERSION)"
 echo "Folder style: $FOLDER_STYLE"
 echo "Linux arch: $ARCH"
-echo 'Running: flutter build linux --release'
+echo "Running: flutter build linux --release ${FLUTTER_VERSION_ARGS[*]}"
 
-# Flutter may skip creating this when no package has Dart FFI native assets;
+# Flutter may skip creating this when no package ships Dart FFI native assets;
 # CMake still expects the path unless linux/CMakeLists.txt guards with EXISTS.
 mkdir -p "$PROJECT_ROOT/build/native_assets/linux"
 
-flutter build linux --release
+flutter build linux --release "${FLUTTER_VERSION_ARGS[@]}"
 
 if [[ ! -x "$BINARY_PATH" ]]; then
   echo "Build finished but executable not found at: $BINARY_PATH" >&2

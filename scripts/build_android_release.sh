@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # Builds a Release APK and copies it to dist/android/<name>.apk for distribution.
 #
+# Version SSOT: ./VERSION (synced to pubspec.yaml; passed as --build-name/--build-number).
+#
 # File naming (default: version + build date/time):
 #   ./scripts/build_android_release.sh
-#   ./scripts/build_android_release.sh --folder-style Version      # Pomodoro-1.0.0+1.apk
+#   ./scripts/build_android_release.sh --folder-style Version      # Pomodoro-<VERSION>.apk
 #   ./scripts/build_android_release.sh --folder-style Date         # Pomodoro-2026-07-19_133045.apk
-#   ./scripts/build_android_release.sh --folder-style VersionDate  # Pomodoro-1.0.0+1_2026-07-19_133045.apk
+#   ./scripts/build_android_release.sh --folder-style VersionDate  # Pomodoro-<VERSION>_….apk
 #
 # Optional:
 #   ./scripts/build_android_release.sh --target-platform android-arm64
@@ -29,7 +31,7 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     -h|--help)
-      sed -n '2,15p' "$0"
+      sed -n '2,16p' "$0"
       exit 0
       ;;
     *)
@@ -49,21 +51,12 @@ esac
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
+VERSION_SCRIPT="$PROJECT_ROOT/scripts/app_version.sh"
 
 if ! command -v flutter >/dev/null 2>&1; then
   echo 'flutter not found. Install Flutter or add it to PATH.' >&2
   exit 1
 fi
-
-get_pubspec_version() {
-  local version
-  version="$(sed -n 's/^[[:space:]]*version:[[:space:]]*//p' pubspec.yaml | head -n1 | tr -d '[:space:]')"
-  if [[ -z "$version" ]]; then
-    echo 'Could not read version from pubspec.yaml' >&2
-    exit 1
-  fi
-  printf '%s' "$version"
-}
 
 dist_file_stem() {
   local style="$1"
@@ -77,19 +70,23 @@ dist_file_stem() {
   esac
 }
 
-APP_VERSION="$(get_pubspec_version)"
+"$VERSION_SCRIPT" sync
+APP_VERSION="$("$VERSION_SCRIPT" print)"
+# shellcheck disable=SC2046
+read -r -a FLUTTER_VERSION_ARGS < <("$VERSION_SCRIPT" flutter-args)
+
 DIST_STEM="$(dist_file_stem "$FOLDER_STYLE" "$APP_VERSION")"
 DIST_ROOT="$PROJECT_ROOT/dist/android"
 DIST_APK="$DIST_ROOT/${DIST_STEM}.apk"
 SOURCE_APK="$PROJECT_ROOT/build/app/outputs/flutter-apk/app-release.apk"
 
-BUILD_ARGS=(build apk --release)
+BUILD_ARGS=(build apk --release "${FLUTTER_VERSION_ARGS[@]}")
 if [[ -n "$TARGET_PLATFORM" ]]; then
   BUILD_ARGS+=(--target-platform "$TARGET_PLATFORM")
 fi
 
 echo "Using Flutter: $(command -v flutter)"
-echo "App version: $APP_VERSION"
+echo "App version: $APP_VERSION (from VERSION)"
 echo "Name style: $FOLDER_STYLE"
 echo "App id: com.pomodoro_sczuw.app"
 if [[ -n "$TARGET_PLATFORM" ]]; then

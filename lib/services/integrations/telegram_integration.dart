@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
 import 'package:pomodoro_sczuw/enums/user_action.dart';
 import 'package:pomodoro_sczuw/services/integrations/abstract/integration.dart';
@@ -32,15 +35,37 @@ class TelegramIntegration implements Integration {
   TelegramIntegration({
     required this.credentialsProvider,
     Dio? dio,
-  }) : _dio =
-           dio ??
-           Dio(
-             BaseOptions(
-               connectTimeout: const Duration(seconds: 5),
-               receiveTimeout: const Duration(seconds: 5),
-               sendTimeout: const Duration(seconds: 5),
-             ),
-           );
+  }) : _dio = dio ?? _createDefaultDio();
+
+  static Dio _createDefaultDio() {
+    final dio = Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 20),
+        receiveTimeout: const Duration(seconds: 20),
+        sendTimeout: const Duration(seconds: 20),
+      ),
+    );
+    // Prefer IPv4: on some Android networks IPv6 to api.telegram.org hangs
+    // until connectTimeout while IPv4 works.
+    dio.httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () {
+        final client = HttpClient();
+        client.findProxy = (_) => 'DIRECT';
+        client.connectionFactory = (uri, proxyHost, proxyPort) async {
+          final addresses = await InternetAddress.lookup(
+            uri.host,
+            type: InternetAddressType.IPv4,
+          );
+          if (addresses.isEmpty) {
+            throw SocketException('Failed to resolve IPv4 for ${uri.host}');
+          }
+          return Socket.startConnect(addresses.first, uri.port);
+        };
+        return client;
+      },
+    );
+    return dio;
+  }
 
   @override
   String get id => 'telegram';
@@ -87,8 +112,48 @@ class TelegramIntegration implements Integration {
       );
       return null;
     } catch (e) {
-      return e.toString();
+      return _formatSendError(e);
     }
+  }
+
+  String _formatSendError(Object error) {
+    if (error is DioException) {
+      final apiDescription = _telegramApiDescription(error.response?.data);
+      if (apiDescription != null) return apiDescription;
+
+      return switch (error.type) {
+        DioExceptionType.connectionTimeout ||
+        DioExceptionType.sendTimeout ||
+        DioExceptionType.receiveTimeout =>
+          L10n().safeGetText(
+            (t) => t.telegram_timeout,
+            'Connection timed out. Check network or VPN.',
+          ),
+        DioExceptionType.connectionError => L10n().safeGetText(
+          (t) => t.telegram_connectionError,
+          'Cannot reach Telegram API. Check network or VPN.',
+        ),
+        _ => L10n().safeGetText(
+          (t) => t.telegram_requestFailed,
+          'Request failed',
+        ),
+      };
+    }
+
+    return L10n().safeGetText(
+      (t) => t.telegram_requestFailed,
+      'Request failed',
+    );
+  }
+
+  String? _telegramApiDescription(Object? data) {
+    if (data is Map) {
+      final description = data['description'];
+      if (description is String && description.trim().isNotEmpty) {
+        return description.trim();
+      }
+    }
+    return null;
   }
 
   String? _messageForEvent(IntegrationEvent event) {

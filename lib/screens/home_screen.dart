@@ -18,7 +18,12 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final timer = ref.watch(sessionProvider);
     final timerColors = Theme.of(context).extension<TimerColors>()!;
-    final versionLabel = ref.watch(appVersionLabelProvider).valueOrNull;
+    final versionAsync = ref.watch(appVersionLabelProvider);
+    final versionLabel = versionAsync.when(
+      data: (label) => label,
+      loading: () => '…',
+      error: (error, stackTrace) => 'v?',
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -56,16 +61,20 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
           ),
-          if (versionLabel != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
+          SafeArea(
+            top: false,
+            minimum: const EdgeInsets.only(bottom: 12),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 versionLabel,
+                textAlign: TextAlign.center,
                 style: AppTextStyles.caption.copyWith(
                   color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.45),
                 ),
               ),
             ),
+          ),
         ],
       ),
     );

@@ -1,11 +1,13 @@
 # Builds a runnable Windows Release bundle with Pomodoro.exe and copies it to
 # dist\windows\<folder>\ for distribution.
 #
+# Version SSOT: .\VERSION (synced to pubspec.yaml; passed as --build-name/--build-number).
+#
 # Folder naming (default: version + build date/time):
 #   .\scripts\build_windows_release.ps1
-#   .\scripts\build_windows_release.ps1 -FolderStyle Version      # Pomodoro-1.0.0+1
+#   .\scripts\build_windows_release.ps1 -FolderStyle Version      # Pomodoro-<VERSION>
 #   .\scripts\build_windows_release.ps1 -FolderStyle Date         # Pomodoro-2026-07-19_133045
-#   .\scripts\build_windows_release.ps1 -FolderStyle VersionDate  # Pomodoro-1.0.0+1_2026-07-19_133045
+#   .\scripts\build_windows_release.ps1 -FolderStyle VersionDate  # Pomodoro-<VERSION>_….
 #
 # Prerequisites: Flutter SDK, Visual Studio 2022 Build Tools with C++ workload.
 
@@ -19,15 +21,7 @@ $ErrorActionPreference = 'Stop'
 $ProjectRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 Set-Location $ProjectRoot
 
-function Get-PubspecVersion {
-  $pubspecPath = Join-Path $ProjectRoot 'pubspec.yaml'
-  foreach ($line in Get-Content $pubspecPath) {
-    if ($line -match '^\s*version:\s*(.+)\s*$') {
-      return $Matches[1].Trim()
-    }
-  }
-  Write-Error 'Could not read version from pubspec.yaml'
-}
+$VersionScript = Join-Path $PSScriptRoot 'app_version.ps1'
 
 function Get-DistFolderName {
   param(
@@ -65,21 +59,24 @@ if (-not $FlutterBat -or -not (Test-Path $FlutterBat)) {
   Write-Error 'flutter.bat not found. Install Flutter or set FLUTTER_ROOT / add flutter to PATH.'
 }
 
-$AppVersion = Get-PubspecVersion
+& $VersionScript sync | Out-Host
+$AppVersion = (& $VersionScript print).Trim()
+$FlutterVersionArgs = ((& $VersionScript flutter-args).Trim() -split '\s+')
+
 $DistFolderName = Get-DistFolderName -Style $FolderStyle -AppVersion $AppVersion
 $DistRoot = Join-Path $ProjectRoot 'dist\windows'
 $DistDir = Join-Path $DistRoot $DistFolderName
 
 Write-Host "Using Flutter: $FlutterBat"
-Write-Host "App version: $AppVersion"
+Write-Host "App version: $AppVersion (from VERSION)"
 Write-Host "Folder style: $FolderStyle"
-Write-Host 'Running: flutter build windows --release'
+Write-Host "Running: flutter build windows --release $($FlutterVersionArgs -join ' ')"
 
-# Flutter may skip creating this when no package has Dart FFI native assets;
+# Flutter may skip creating this when no package ships Dart FFI native assets;
 # CMake still expects the path unless windows/CMakeLists.txt guards with EXISTS.
 New-Item -ItemType Directory -Force -Path (Join-Path $ProjectRoot 'build\native_assets\windows') | Out-Null
 
-& $FlutterBat build windows --release
+& $FlutterBat build windows --release @FlutterVersionArgs
 if ($LASTEXITCODE -ne 0) {
   exit $LASTEXITCODE
 }

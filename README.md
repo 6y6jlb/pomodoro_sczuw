@@ -2,7 +2,18 @@
 
 Pomodoro timer (Flutter). Primary target: Linux; also Windows desktop and Android (foreground service timer).
 
-Version for release scripts is taken from `pubspec.yaml` (`version: 1.0.0+1`).
+**App version (single source of truth):** [`VERSION`](VERSION) (`x.y.z+build`).  
+`make` / release scripts sync it into `pubspec.yaml` and pass `--build-name` / `--build-number` / `--dart-define=APP_VERSION=…` so Linux, Windows, and Android (and the in-app label) all get the same value.
+
+```bash
+make version                     # show
+make version-major               # 1.2.3+5 → 2.0.0+5
+make version-minor               # 1.2.3+5 → 1.3.0+5
+make version-patch               # 1.2.3+5 → 1.2.4+5
+make version-build               # 1.2.3+5 → 1.2.3+6  (Android versionCode)
+make version VERSION=1.2.0+3     # set exact + sync pubspec
+make sync-version                # VERSION → pubspec.yaml only
+```
 
 ## Requirements
 
@@ -127,11 +138,11 @@ flutter build linux --release
 # or: make run-linux / make build-linux
 ```
 
-Release bundle via script / Make (copies into `dist/linux/` with version/timestamp, e.g. `Pomodoro-1.0.0+1_2026-07-19_133045`):
+Release bundle via script / Make (copies into `dist/linux/` with version/timestamp, e.g. `Pomodoro-1.1.0+2_2026-07-19_133045`):
 
 ```bash
 make release-linux
-make release-linux FOLDER_STYLE=Version      # Pomodoro-1.0.0+1
+make release-linux FOLDER_STYLE=Version      # Pomodoro-1.1.0+2
 make release-linux FOLDER_STYLE=Date         # Pomodoro-2026-07-19_133045
 make release-linux FOLDER_STYLE=VersionDate  # default
 
@@ -152,11 +163,11 @@ flutter build windows --release
 # or: make run-windows / make build-windows
 ```
 
-Release bundle via script / Make (copies into `dist\windows\` with version/timestamp, e.g. `Pomodoro-1.0.0+1_2026-07-19_133045`):
+Release bundle via script / Make (copies into `dist\windows\` with version/timestamp, e.g. `Pomodoro-1.1.0+2_2026-07-19_133045`):
 
 ```powershell
 make release-windows
-make release-windows FOLDER_STYLE=Version      # Pomodoro-1.0.0+1
+make release-windows FOLDER_STYLE=Version      # Pomodoro-1.1.0+2
 make release-windows FOLDER_STYLE=Date         # Pomodoro-2026-07-19_133045
 make release-windows FOLDER_STYLE=VersionDate  # default
 
@@ -178,11 +189,11 @@ flutter build apk --release
 # or: make run-android / make build-android
 ```
 
-Release APK via script / Make (copies into `dist/android/` as a single `.apk`, e.g. `Pomodoro-1.0.0+1_2026-07-19_133045.apk`):
+Release APK via script / Make (copies into `dist/android/` as a single `.apk`, e.g. `Pomodoro-1.1.0+2_2026-07-19_133045.apk`):
 
 ```bash
 make release-android
-make release-android FOLDER_STYLE=Version      # Pomodoro-1.0.0+1.apk
+make release-android FOLDER_STYLE=Version      # Pomodoro-1.1.0+2.apk
 make release-android FOLDER_STYLE=Date         # Pomodoro-2026-07-19_133045.apk
 make release-android FOLDER_STYLE=VersionDate  # default
 make release-android TARGET_PLATFORM=android-arm64

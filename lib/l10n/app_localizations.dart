@@ -497,6 +497,24 @@ abstract class AppLocalizations {
   /// **'Telegram is disabled or token/chat id is empty'**
   String get telegram_notConfigured;
 
+  /// No description provided for @telegram_timeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection timed out. Check network or VPN.'**
+  String get telegram_timeout;
+
+  /// No description provided for @telegram_connectionError.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot reach Telegram API. Check network or VPN.'**
+  String get telegram_connectionError;
+
+  /// No description provided for @telegram_requestFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Request failed'**
+  String get telegram_requestFailed;
+
   /// No description provided for @telegram_started.
   ///
   /// In en, this message translates to:
