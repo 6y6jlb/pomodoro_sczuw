@@ -19,6 +19,7 @@ class AndroidForegroundController {
 
   void Function(AndroidForegroundAction action)? onAction;
   bool _taskDataCallbackRegistered = false;
+  String? _lastNotificationContent;
 
   static Future<void> initCommunicationPort() async {
     if (!Platform.isAndroid) return;
@@ -90,8 +91,12 @@ class AndroidForegroundController {
     }
 
     final title = _notificationTitle(session);
-    final text = _formatTime(session.currentSeconds);
+    final text = _notificationBody(session);
     final buttons = _notificationButtons(session);
+    final contentKey = '$title|$text|${session.isPaused}';
+    if (_lastNotificationContent == contentKey && await FlutterForegroundTask.isRunningService) {
+      return;
+    }
 
     if (await FlutterForegroundTask.isRunningService) {
       await FlutterForegroundTask.updateService(
@@ -99,6 +104,7 @@ class AndroidForegroundController {
         notificationText: text,
         notificationButtons: buttons,
       );
+      _lastNotificationContent = contentKey;
       return;
     }
 
@@ -115,10 +121,12 @@ class AndroidForegroundController {
       notificationInitialRoute: '/',
       callback: pomodoroForegroundStartCallback,
     );
+    _lastNotificationContent = contentKey;
   }
 
   Future<void> stopSession() async {
     if (!Platform.isAndroid) return;
+    _lastNotificationContent = null;
     if (await FlutterForegroundTask.isRunningService) {
       await FlutterForegroundTask.stopService();
     }
@@ -156,10 +164,15 @@ class AndroidForegroundController {
     return stateLabel;
   }
 
-  String _formatTime(int seconds) {
-    final minutes = seconds ~/ 60;
-    final remainingSeconds = seconds % 60;
-    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+  String _notificationBody(PomodoroSession session) {
+    final l10n = L10n();
+    return l10n.safeGetText((t) {
+      return switch (session.state) {
+        SessionState.activity => t.notification_activity_body,
+        SessionState.rest => t.notification_rest_body,
+        SessionState.inactivity => t.notification_inactivity_body,
+      };
+    }, 'Tap to open');
   }
 
   Future<void> dispose() async {

@@ -159,10 +159,6 @@ final pomodoroSessionManagerProvider = Provider<PomodoroSessionManager>((ref) {
     }
   });
 
-  sessionManager.onSessionTick = (session) {
-    updateAndroidForeground(session);
-  };
-
   sessionManager.onStateChanged = (newState, previousState) {
     try {
       notificationService.showStateChangeNotification(newState, previousState);

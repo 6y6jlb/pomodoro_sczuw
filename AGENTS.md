@@ -43,7 +43,7 @@
 - **Windows**: `WindowsInitializationSettings` (appName / AUMID `com.pomodoro_sczuw.app` / fixed GUID) + `WindowsNotificationDetails`; unpackaged apps can `show` toasts, but cancel/getActive need MSIX
 - **Android**:
   - **Alerts**: `flutter_local_notifications` — channel `pomodoro_session`, state-change / completion toasts (`AndroidNotificationDetails`, runtime `POST_NOTIFICATIONS`)
-  - **Ongoing (tray analog)**: `flutter_foreground_task` — channel `pomodoro_foreground`, MM:SS + pause/resume/stop actions + tap-to-open; updated on each tick via `onSessionTick`
+  - **Ongoing (tray analog)**: `flutter_foreground_task` — channel `pomodoro_foreground`, current status (no per-second MM:SS) + pause/resume/stop actions + tap-to-open; updated on state/pause changes only
 - **Config**: Linux position (10,10); alerts on state change/completion via `SystemNotificationService` singleton (`instance` shared by `AppInitializer` and provider)
 - **App id**: `com.pomodoro_sczuw.app`; Gradle needs core library desugaring for `flutter_local_notifications`
 
@@ -147,7 +147,7 @@ User Action → `SessionNotifier` → `TimerNotifier` → `PomodoroSessionManage
 
 - `PomodoroSessionManager` - Timer lifecycle, session state, event handling
 - `TimerService` (abstract) - Platform timer (`DesktopTimerService` / `AndroidTimerService`)
-- `AndroidForegroundController` - Android FGS lifecycle, ongoing notification MM:SS + pause/resume/stop
+- `AndroidForegroundController` - Android FGS lifecycle, ongoing notification status + pause/resume/stop
 - `TimerNotifier` - Riverpod provider for UI
 - `SessionNotifier` - Wraps `TimerNotifier`, adds sounds
 - `PomodoroSession` - Immutable session model
@@ -158,7 +158,7 @@ User Action → `SessionNotifier` → `TimerNotifier` → `PomodoroSessionManage
 ### Notifications & Sounds
 
 - **Notifications**: `onStateChanged` / `onSessionCompleted` → Linux/Windows/Android alert toasts
-- **Android ongoing**: while activity/rest → FGS notification with MM:SS; actions → `SessionNotifier` pause/resume/stop; tap → open app
+- **Android ongoing**: while activity/rest → FGS notification with status (not MM:SS); actions → `SessionNotifier` pause/resume/stop; tap → open app
 - **Sounds**: `playForEvent` from settings — user actions (`SessionNotifier`), session complete (`PomodoroSessionManager`), optional per-state sounds on `onStateChanged`
 - **Rest overlay**: when `restOverlayEnabled`, enter `rest` → `RestOverlayService.show()` + UI overlay; leave rest / dismiss → `hide()` (desktop also toggles fullscreen window flags)
 
