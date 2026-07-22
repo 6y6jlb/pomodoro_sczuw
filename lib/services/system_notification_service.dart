@@ -19,11 +19,16 @@ class SystemNotificationService {
   static const String _windowsAppName = 'Pomodoro';
   static const String _windowsAppUserModelId = 'com.pomodoro_sczuw.app';
   static const String _windowsGuid = '4c474872-1b0f-42bd-95a2-df8f9d3d3665';
+  static const String _androidChannelId = 'pomodoro_session';
+  static const String _androidChannelName = 'Pomodoro session';
 
   Future<void> initialize() async {
     if (_initialized) return;
 
     try {
+      const AndroidInitializationSettings initializationSettingsAndroid =
+          AndroidInitializationSettings('@mipmap/ic_launcher');
+
       final LinuxInitializationSettings initializationSettingsLinux =
           LinuxInitializationSettings(
         defaultActionName: 'Open Pomodoro',
@@ -38,24 +43,59 @@ class SystemNotificationService {
       );
 
       final InitializationSettings initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid,
         linux: initializationSettingsLinux,
         windows: initializationSettingsWindows,
       );
 
       await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+      if (Platform.isAndroid) {
+        await _createAndroidNotificationChannel();
+        await _requestAndroidNotificationPermission();
+      }
+
       _initialized = true;
     } catch (e) {
       print('Error initializing notifications: ${e.toString()}');
     }
   }
 
+  Future<void> _createAndroidNotificationChannel() async {
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      _androidChannelId,
+      _androidChannelName,
+      description: 'Pomodoro session state and completion alerts',
+      importance: Importance.high,
+    );
+
+    await _flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+  }
+
+  Future<void> _requestAndroidNotificationPermission() async {
+    await _flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
+  }
+
   Future<void> showNotification({required String title, String? body, String? iconPath}) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      _androidChannelId,
+      _androidChannelName,
+      channelDescription: 'Pomodoro session state and completion alerts',
+      importance: Importance.high,
+      priority: Priority.high,
+    );
+
     final LinuxNotificationDetails linuxPlatformChannelSpecifics = LinuxNotificationDetails(
       location: const LinuxNotificationLocation(10, 10),
       icon: iconPath != null ? AssetsLinuxIcon(iconPath) : null,
     );
 
     final NotificationDetails notificationDetails = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
       linux: linuxPlatformChannelSpecifics,
       windows: const WindowsNotificationDetails(),
     );

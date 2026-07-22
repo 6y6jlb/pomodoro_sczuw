@@ -19,6 +19,7 @@ import 'package:pomodoro_sczuw/services/l10n.dart';
 import 'package:pomodoro_sczuw/services/rest_overlay_service.dart';
 import 'package:pomodoro_sczuw/theme/app_themes.dart';
 import 'package:pomodoro_sczuw/utils/consts/integration_constant.dart';
+import 'package:pomodoro_sczuw/utils/platform_support.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -40,10 +41,13 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
     super.initState();
     _integrationNavigatorObserver = IntegrationNavigatorObserver(ref.read(integrationBusProvider));
     _restOverlayService = ref.read(restOverlayServiceProvider);
-    windowManager.addListener(this);
-    trayManager.addListener(this);
-    _initTray();
-    _initWindowManager();
+
+    if (isDesktop) {
+      windowManager.addListener(this);
+      trayManager.addListener(this);
+      _initTray();
+      _initWindowManager();
+    }
 
     // Ensure session manager (and its rest-overlay wiring) is created.
     ref.read(pomodoroSessionManagerProvider);
@@ -114,6 +118,8 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
   }
 
   void _updateTrayAttributes(PomodoroSession session) {
+    if (!isDesktop) return;
+
     final timeString = _formatTime(session.currentSeconds);
     final tooltip = session.state.isInactive() ? 'Pomodoro' : timeString;
 
@@ -130,8 +136,10 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
   @override
   void dispose() {
     _restOverlayService.removeListener(_onRestOverlayChanged);
-    windowManager.removeListener(this);
-    trayManager.removeListener(this);
+    if (isDesktop) {
+      windowManager.removeListener(this);
+      trayManager.removeListener(this);
+    }
     super.dispose();
   }
 

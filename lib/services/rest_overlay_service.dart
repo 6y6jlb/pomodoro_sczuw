@@ -1,9 +1,11 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
+import 'package:pomodoro_sczuw/utils/platform_support.dart';
 import 'package:window_manager/window_manager.dart';
 
-/// Controls fullscreen always-on-top rest break overlay window flags.
+/// Controls rest overlay visibility.
+/// On desktop also toggles fullscreen always-on-top window flags.
 class RestOverlayService extends ChangeNotifier {
   bool _isVisible = false;
   bool _isTransitioning = false;
@@ -17,19 +19,23 @@ class RestOverlayService extends ChangeNotifier {
     _isTransitioning = true;
 
     try {
-      _savedBounds = await windowManager.getBounds();
-      _wasAlwaysOnTop = await windowManager.isAlwaysOnTop();
+      if (isDesktop) {
+        _savedBounds = await windowManager.getBounds();
+        _wasAlwaysOnTop = await windowManager.isAlwaysOnTop();
 
-      await windowManager.show();
-      await windowManager.focus();
-      await windowManager.setAlwaysOnTop(true);
-      await windowManager.setFullScreen(true);
+        await windowManager.show();
+        await windowManager.focus();
+        await windowManager.setAlwaysOnTop(true);
+        await windowManager.setFullScreen(true);
+      }
 
       _isVisible = true;
       notifyListeners();
     } catch (e) {
       print('Error showing rest overlay: $e');
-      await _restoreWindowFlagsBestEffort();
+      if (isDesktop) {
+        await _restoreWindowFlagsBestEffort();
+      }
     } finally {
       _isTransitioning = false;
     }
@@ -40,10 +46,14 @@ class RestOverlayService extends ChangeNotifier {
     _isTransitioning = true;
 
     try {
-      await _restoreWindowFlagsBestEffort();
+      if (isDesktop) {
+        await _restoreWindowFlagsBestEffort();
+      }
     } catch (e) {
       print('Error hiding rest overlay: $e');
-      await _forceClearOverlayFlags();
+      if (isDesktop) {
+        await _forceClearOverlayFlags();
+      }
     } finally {
       _isVisible = false;
       _isTransitioning = false;
@@ -80,7 +90,7 @@ class RestOverlayService extends ChangeNotifier {
 
   @override
   void dispose() {
-    if (_isVisible) {
+    if (_isVisible && isDesktop) {
       _forceClearOverlayFlags();
     }
     super.dispose();
