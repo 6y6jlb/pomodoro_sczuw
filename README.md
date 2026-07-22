@@ -1,6 +1,6 @@
 # Pomodoro
 
-Pomodoro timer (Flutter). Primary target: Linux; also Windows desktop and Android MVP (foreground).
+Pomodoro timer (Flutter). Primary target: Linux; also Windows desktop and Android (foreground service timer).
 
 Version for release scripts is taken from `pubspec.yaml` (`version: 1.0.0+1`).
 
@@ -169,7 +169,7 @@ Distribute the **whole** folder (not only `Pomodoro.exe` — keep DLLs and `data
 
 ## Android
 
-Prerequisites: Flutter + Android SDK / Android Studio (see [Requirements](#requirements)), optional Make + bash (Ubuntu/WSL or Git Bash). App id: `com.pomodoro_sczuw.app`. Timer is foreground-only in the current MVP (no background service).
+Prerequisites: Flutter + Android SDK / Android Studio (see [Requirements](#requirements)), optional Make + bash (Ubuntu/WSL or Git Bash). App id: `com.pomodoro_sczuw.app`. While a session is active, a foreground service keeps the timer running when the app is minimized (swipe from recents stops the process and the timer).
 
 ```bash
 flutter run -d android

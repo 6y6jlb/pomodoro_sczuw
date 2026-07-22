@@ -35,6 +35,10 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
   late final RestOverlayService _restOverlayService;
   int _restTipIndex = 0;
   bool _restOverlayVisible = false;
+  bool _trayReady = false;
+  Menu? _trayMenu;
+  String? _lastTrayIconPath;
+  String? _lastTrayTitle;
 
   @override
   void initState() {
@@ -67,22 +71,42 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
     });
   }
 
+  Menu _buildTrayMenu() {
+    // No separators: AppIndicator/dbusmenu on Linux often renders them as blank
+    // rows and can desync labeled items after icon/title updates.
+    return Menu(
+      items: [
+        MenuItem(key: 'show_window', label: 'Show window'),
+        MenuItem(key: 'collapse_window', label: 'Collapse window'),
+        MenuItem(key: 'exit_app', label: 'Exit app'),
+      ],
+    );
+  }
+
+  Future<void> _applyTrayMenu() async {
+    final menu = _trayMenu;
+    if (menu == null) return;
+    await trayManager.setContextMenu(menu);
+  }
+
   Future<void> _initTray() async {
-    await trayManager.setIcon(SessionState.activity.trayIcon());
+    _trayMenu = _buildTrayMenu();
+    final iconPath = SessionState.activity.trayIcon();
+    await trayManager.setIcon(iconPath);
+    _lastTrayIconPath = iconPath;
+
     if (Platform.isWindows || Platform.isMacOS) {
       await trayManager.setToolTip('Pomodoro');
     }
-    await trayManager.setContextMenu(
-      Menu(
-        items: [
-          MenuItem(key: 'show_window', label: 'Show window'),
-          MenuItem.separator(),
-          MenuItem(key: 'exit_app', label: 'Exit app'),
-          MenuItem.separator(),
-          MenuItem(key: 'collapse_window', label: 'Collapse window'),
-        ],
-      ),
-    );
+
+    // Bind menu immediately, then again shortly after — AppIndicator activates
+    // with an empty menu on first setIcon; a second bind restores labels.
+    await _applyTrayMenu();
+    await Future<void>.delayed(const Duration(milliseconds: 150));
+    if (!mounted) return;
+    await _applyTrayMenu();
+
+    _trayReady = true;
   }
 
   Future<void> _initWindowManager() async {
@@ -118,19 +142,32 @@ class _AppState extends ConsumerState<App> with WindowListener, TrayListener {
   }
 
   void _updateTrayAttributes(PomodoroSession session) {
-    if (!isDesktop) return;
+    if (!isDesktop || !_trayReady) return;
 
     final timeString = _formatTime(session.currentSeconds);
-    final tooltip = session.state.isInactive() ? 'Pomodoro' : timeString;
+    // Avoid empty AppIndicator label — it can break dbusmenu item text sync.
+    final label = session.state.isInactive() ? 'Pomodoro' : timeString;
+    final iconPath = session.state.trayIcon(isPaused: session.isPaused);
 
-    if (Platform.isWindows || Platform.isMacOS) {
-      trayManager.setToolTip(tooltip);
-    }
-    if (!Platform.isWindows) {
-      trayManager.setTitle(session.state.isInactive() ? '' : timeString);
+    if (_lastTrayTitle != label) {
+      _lastTrayTitle = label;
+      if (Platform.isWindows || Platform.isMacOS) {
+        trayManager.setToolTip(label);
+      }
+      if (!Platform.isWindows) {
+        trayManager.setTitle(label);
+      }
     }
 
-    trayManager.setIcon(session.state.trayIcon(isPaused: session.isPaused));
+    if (_lastTrayIconPath == iconPath) return;
+
+    _lastTrayIconPath = iconPath;
+    trayManager.setIcon(iconPath).then((_) async {
+      // Re-bind menu after icon change so Linux AppIndicator keeps labels visible.
+      if (Platform.isLinux && mounted) {
+        await _applyTrayMenu();
+      }
+    });
   }
 
   @override

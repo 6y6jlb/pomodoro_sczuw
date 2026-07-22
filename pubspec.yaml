@@ -49,6 +49,7 @@ dependencies:
   package_info_plus: ^10.2.1
   file_selector: ^1.1.0
   path: ^1.9.1
+  flutter_foreground_task: ^10.0.0
 
 dev_dependencies:
   flutter_test:

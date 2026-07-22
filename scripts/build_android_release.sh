@@ -114,4 +114,4 @@ echo
 echo 'Release APK ready.'
 echo "APK: $DIST_APK"
 echo 'Install with: adb install -r '"$DIST_APK"
-echo 'MVP note: timer is foreground-only (no background service).'
+echo 'Android: timer runs via foreground service while the process is alive (swipe from recents stops it).'

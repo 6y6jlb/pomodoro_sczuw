@@ -1,16 +1,34 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_sczuw/providers/pomodoro_settings_provider.dart';
 import 'package:pomodoro_sczuw/services/abstract/timer_service.dart';
+import 'package:pomodoro_sczuw/services/android/android_foreground_controller.dart';
+import 'package:pomodoro_sczuw/services/android_timer_service.dart';
 import 'package:pomodoro_sczuw/services/desktop_timer_service.dart';
-import 'package:pomodoro_sczuw/services/integrations/esp32_led_integration.dart';
 import 'package:pomodoro_sczuw/services/integrations/integration_bus.dart';
 import 'package:pomodoro_sczuw/services/integrations/telegram_integration.dart';
 import 'package:pomodoro_sczuw/services/rest_overlay_service.dart';
 import 'package:pomodoro_sczuw/services/sound_service.dart';
 import 'package:pomodoro_sczuw/services/system_notification_service.dart';
-import 'package:pomodoro_sczuw/utils/consts/integration_constant.dart';
+
+final androidForegroundControllerProvider = Provider<AndroidForegroundController>((ref) {
+  final controller = AndroidForegroundController();
+  controller.ensureTaskDataCallbackRegistered();
+
+  ref.onDispose(() {
+    controller.dispose();
+  });
+
+  return controller;
+});
 
 final timerServiceProvider = Provider<TimerService>((ref) {
+  if (Platform.isAndroid) {
+    return AndroidTimerService(
+      foregroundController: ref.read(androidForegroundControllerProvider),
+    );
+  }
   return DesktopTimerService();
 });
 

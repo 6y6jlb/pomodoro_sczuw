@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
 import 'package:pomodoro_sczuw/enums/sound_event.dart';
@@ -7,6 +9,7 @@ import 'package:pomodoro_sczuw/models/pomodoro_settings.dart';
 import 'package:pomodoro_sczuw/providers/pomodoro_settings_provider.dart';
 import 'package:pomodoro_sczuw/providers/service_providers.dart';
 import 'package:pomodoro_sczuw/providers/timer_provider.dart';
+import 'package:pomodoro_sczuw/services/android/android_foreground_action.dart';
 import 'package:pomodoro_sczuw/services/integrations/events/integration_event.dart';
 import 'package:pomodoro_sczuw/services/pomodoro_session_manager.dart';
 
@@ -119,6 +122,30 @@ final pomodoroSessionManagerProvider = Provider<PomodoroSessionManager>((ref) {
   final sessionManager = PomodoroSessionManager(timerService, soundService, initialSettings);
   final notificationService = ref.read(systemNotificationServiceProvider);
   final integrationBus = ref.read(integrationBusProvider);
+  final androidForeground = Platform.isAndroid ? ref.read(androidForegroundControllerProvider) : null;
+
+  if (androidForeground != null) {
+    androidForeground.onAction = (action) {
+      final notifier = ref.read(sessionProvider.notifier);
+      switch (action) {
+        case AndroidForegroundAction.pause:
+          notifier.pause();
+        case AndroidForegroundAction.resume:
+          notifier.resume();
+        case AndroidForegroundAction.stop:
+          notifier.changeStateToInactivity();
+      }
+    };
+  }
+
+  void updateAndroidForeground(PomodoroSession session) {
+    if (androidForeground == null) return;
+    if (session.state.hasTimer()) {
+      androidForeground.updateSession(session);
+    } else {
+      androidForeground.stopSession();
+    }
+  }
 
   ref.listen(pomodoroSettingsProvider, (previous, next) {
     if (!next.hasValue) return;
@@ -131,6 +158,10 @@ final pomodoroSessionManagerProvider = Provider<PomodoroSessionManager>((ref) {
       restOverlayService.hide();
     }
   });
+
+  sessionManager.onSessionTick = (session) {
+    updateAndroidForeground(session);
+  };
 
   sessionManager.onStateChanged = (newState, previousState) {
     try {
@@ -152,6 +183,8 @@ final pomodoroSessionManagerProvider = Provider<PomodoroSessionManager>((ref) {
       restOverlayService.hide();
     }
 
+    updateAndroidForeground(sessionManager.currentSession);
+
     integrationBus.publish(
       SessionStatusChanged(
         from: previousState ?? newState,
@@ -162,6 +195,7 @@ final pomodoroSessionManagerProvider = Provider<PomodoroSessionManager>((ref) {
   };
 
   sessionManager.onSessionPaused = () {
+    updateAndroidForeground(sessionManager.currentSession);
     integrationBus.publish(
       SessionPaused(
         state: sessionManager.currentSession.state,
@@ -171,6 +205,7 @@ final pomodoroSessionManagerProvider = Provider<PomodoroSessionManager>((ref) {
   };
 
   sessionManager.onSessionResumed = () {
+    updateAndroidForeground(sessionManager.currentSession);
     integrationBus.publish(
       SessionResumed(
         state: sessionManager.currentSession.state,
@@ -194,6 +229,9 @@ final pomodoroSessionManagerProvider = Provider<PomodoroSessionManager>((ref) {
   };
 
   ref.onDispose(() {
+    if (androidForeground != null) {
+      androidForeground.onAction = null;
+    }
     sessionManager.dispose();
   });
 
