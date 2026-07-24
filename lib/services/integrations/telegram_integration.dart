@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:pomodoro_sczuw/enums/session_state.dart';
 import 'package:pomodoro_sczuw/enums/user_action.dart';
 import 'package:pomodoro_sczuw/services/integrations/abstract/integration.dart';
@@ -19,8 +16,7 @@ class TelegramCredentials {
     required this.chatId,
   });
 
-  bool get isConfigured =>
-      enabled && botToken.trim().isNotEmpty && chatId.trim().isNotEmpty;
+  bool get isConfigured => enabled && botToken.trim().isNotEmpty && chatId.trim().isNotEmpty;
 }
 
 /// Sends personal Telegram messages for session lifecycle events.
@@ -35,37 +31,14 @@ class TelegramIntegration implements Integration {
   TelegramIntegration({
     required this.credentialsProvider,
     Dio? dio,
-  }) : _dio = dio ?? _createDefaultDio();
-
-  static Dio _createDefaultDio() {
-    final dio = Dio(
-      BaseOptions(
-        connectTimeout: const Duration(seconds: 20),
-        receiveTimeout: const Duration(seconds: 20),
-        sendTimeout: const Duration(seconds: 20),
-      ),
-    );
-    // Prefer IPv4: on some Android networks IPv6 to api.telegram.org hangs
-    // until connectTimeout while IPv4 works.
-    dio.httpClientAdapter = IOHttpClientAdapter(
-      createHttpClient: () {
-        final client = HttpClient();
-        client.findProxy = (_) => 'DIRECT';
-        client.connectionFactory = (uri, proxyHost, proxyPort) async {
-          final addresses = await InternetAddress.lookup(
-            uri.host,
-            type: InternetAddressType.IPv4,
-          );
-          if (addresses.isEmpty) {
-            throw SocketException('Failed to resolve IPv4 for ${uri.host}');
-          }
-          return Socket.startConnect(addresses.first, uri.port);
-        };
-        return client;
-      },
-    );
-    return dio;
-  }
+  }) : _dio = dio ??
+            Dio(
+              BaseOptions(
+                connectTimeout: const Duration(seconds: 20),
+                receiveTimeout: const Duration(seconds: 20),
+                sendTimeout: const Duration(seconds: 20),
+              ),
+            );
 
   @override
   String get id => 'telegram';
@@ -130,13 +103,13 @@ class TelegramIntegration implements Integration {
             'Connection timed out. Check network or VPN.',
           ),
         DioExceptionType.connectionError => L10n().safeGetText(
-          (t) => t.telegram_connectionError,
-          'Cannot reach Telegram API. Check network or VPN.',
-        ),
+            (t) => t.telegram_connectionError,
+            'Cannot reach Telegram API. Check network or VPN.',
+          ),
         _ => L10n().safeGetText(
-          (t) => t.telegram_requestFailed,
-          'Request failed',
-        ),
+            (t) => t.telegram_requestFailed,
+            'Request failed',
+          ),
       };
     }
 
@@ -159,23 +132,23 @@ class TelegramIntegration implements Integration {
   String? _messageForEvent(IntegrationEvent event) {
     return switch (event) {
       UserActionPressed(action: UserAction.start) => L10n().safeGetText(
-        (t) => t.telegram_started,
-        'Pomodoro: started',
-      ),
+          (t) => t.telegram_started,
+          'Pomodoro: started',
+        ),
       UserActionPressed(action: UserAction.stop) => L10n().safeGetText(
-        (t) => t.telegram_stopped,
-        'Pomodoro: stopped',
-      ),
+          (t) => t.telegram_stopped,
+          'Pomodoro: stopped',
+        ),
       UserActionPressed() => null,
       SessionStatusChanged(:final from, :final to) => _statusChangedMessage(from, to),
       SessionPaused(:final state) => L10n().safeGetText(
-        (t) => t.telegram_paused(_stateLabel(state)),
-        'Pomodoro: paused (${_stateLabel(state)})',
-      ),
+          (t) => t.telegram_paused(_stateLabel(state)),
+          'Pomodoro: paused (${_stateLabel(state)})',
+        ),
       SessionResumed(:final state) => L10n().safeGetText(
-        (t) => t.telegram_resumed(_stateLabel(state)),
-        'Pomodoro: resumed (${_stateLabel(state)})',
-      ),
+          (t) => t.telegram_resumed(_stateLabel(state)),
+          'Pomodoro: resumed (${_stateLabel(state)})',
+        ),
       SessionCompleted() || PageNavigated() => null,
     };
   }
